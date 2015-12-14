@@ -1,0 +1,24 @@
+{
+  "generator-m-ionic": {
+    "answers": {
+      "appName": "Kicker hack",
+      "appId": "org.zalando.kickerhack",
+      "ionicCss": false,
+      "bowerPackages": [],
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "plugins": [
+        "cordova-plugin-device",
+        "cordova-plugin-dialogs",
+        "cordova-plugin-inappbrowser",
+        "com.ionic.keyboard",
+        "cordova-plugin-network-information",
+        "cordova-plugin-splashscreen",
+        "cordova-plugin-statusbar"
+      ],
+      "appModule": "kickerHack"
+    }
+  }
+}
