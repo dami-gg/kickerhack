@@ -1,0 +1,19 @@
+<ion-view view-title="{{gameCtrl.game.teamA}} vs {{gameCtrl.game.teamB}}">
+  <ion-content class="padding">
+
+    <div class="list card">
+      <div>
+        <p>{{gameCtrl.game.teamA}}</p>
+        <p>{{gameCtrl.game.scoreA}}</p>
+      </div>
+
+      <div>
+        <p>{{gameCtrl.game.teamB}}</p>
+        <p>{{gameCtrl.game.scoreB}}</p>
+      </div>
+    </div>
+
+    <button ng-click="scoreGoal()">I have scored</button>
+
+  </ion-content>
+</ion-view>
