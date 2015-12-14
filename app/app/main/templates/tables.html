@@ -1,0 +1,28 @@
+<ion-view view-title="Tables">
+  <ion-content>
+
+    <div class="list card floor" ng-repeat="floorTables in tablesCtrl.tablesByFloor">
+      <div class="item item-avatar">
+        <p class="title">Floor {{floorTables.floor}}</p>
+      </div>
+      <div class="item item-body" ng-repeat="table in floorTables.tables">
+        <div class="row responsive-md" ng-if="$even">
+          <div class="col">
+            <div class="card">
+              {{floorTables.tables[$index].id}}
+              <p>Some text</p>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              {{floorTables.tables[$index+1].id}}
+              <p>Some text</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>
