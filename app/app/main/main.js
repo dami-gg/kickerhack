@@ -62,4 +62,15 @@ angular.module('main', [
           }
         }
       });
+  })
+  .run(function ($ionicPlatform, $log, NFCService) {
+    $ionicPlatform.ready(function () {
+      /*global nfc:true*/
+
+      if (NFCService.hasNFC()) {
+        NFCService.initialize();
+      } else {
+        $log.log('No NFC on this device.');
+      }
+    });
   });

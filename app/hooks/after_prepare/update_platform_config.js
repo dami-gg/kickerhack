@@ -128,7 +128,8 @@ var platformConfig = (function () {
         destination: 'android:windowSoftInputMode'
       }
     },
-    'ios': {}
+    'ios': {},
+    'browser': {}
   };
   var configXmlData, preferencesData;
 
@@ -360,9 +361,15 @@ var platformConfig = (function () {
 // Main
 (function () {
   if (rootdir) {
+    var supportedPlatforms = ['android', 'ios'];
+
     // go through each of the platform directories that have been prepared
     var platforms = _.filter(fs.readdirSync('platforms'), function (file) {
       return fs.statSync(path.resolve('platforms', file)).isDirectory();
+    });
+
+    platforms = _.filter(platforms, function (platform) {
+      return supportedPlatforms.indexOf(platform) !== -1;
     });
 
     _.each(platforms, function (platform) {
