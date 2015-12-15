@@ -21,6 +21,6 @@ GET     /games                      controllers.Application.getGames
 GET     /games/:gameId              controllers.Application.getGame(gameId: Long)
 
 # NFC data
-GET     /nfc-data                   controllers.Application.getNfcData
+GET     /nfc-data                   controllers.Application.getNfcDatas
 GET     /nfc-data/:uuid             controllers.Application.getNfcData(uuid: java.util.UUID)
 

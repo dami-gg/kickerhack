@@ -66,11 +66,8 @@ class Application extends Controller {
   //
   // NFC data
   //
-  val mockNfcData = NfcData()
-  def getNfcData = Action
-  def getNfcData(uuid: UUID) = Action {
-    val nfcData = NfcData(uuid, TableId(567), Home, Attack)
-
-    Ok(Json.toJson(nfcData))
-  }
+  val mockNfcData = NfcData(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"), TableId(567), Home, Attack)
+  val mockNfcDatas = Map("de305d54-75b4-431b-adb2-eb6b9e546014" -> mockNfcData)
+  def getNfcDatas = TODO
+  def getNfcData(uuid: UUID) = TODO
 }
