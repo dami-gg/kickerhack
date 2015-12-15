@@ -4,14 +4,37 @@
 
     <div class="row row-center">
       <div class="col text-center">
-        <h3>Checking into game of tag {{checkInCtrl.tagId}}...</h3>
+        <h3>Checking into game of tag {{ checkInCtrl.tagId | limitTo: 4 }}...</h3>
       </div>
     </div>
 
-    <div class="row row-center">
+    <div class="row row-center" ng-if="!checkInCtrl.tagData">
+      <div class="col text-center">
+        <ion-spinner></ion-spinner>
+      </div>
+    </div>
+
+    <div class="row row-center" ng-if="checkInCtrl.tagData">
+      <div class="col-25">
+        Info:
+      </div>
+      <div class="col-25">
+        {{ checkInCtrl.tagData.table_id }}
+      </div>
+      <div class="col-25">
+        {{ checkInCtrl.tagData.side }}
+      </div>
+      <div class="col-25">
+        {{ checkInCtrl.tagData.position }}
+      </div>
+    </div>
+
+    <div class="row row-center" ng-if="checkInCtrl.tagData">
       <div class="col">
-        <button disabled="disabled" class="button button-block button-positive icon-right ion-chevron-right">
-          START GAME
+        <button 
+          ng-click="checkInCtrl.checkIn()" 
+          class="button button-block button-positive icon-right ion-chevron-right">
+          Check-In
         </button>
       </div>
     </div>

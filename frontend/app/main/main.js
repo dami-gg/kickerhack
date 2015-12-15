@@ -92,6 +92,8 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router'])
         NFCService.registerListener();
       } else {
         $log.log('No NFC on this device.');
+        var mockEvent = { tag: { ndefMessage: [ { payload: [ 94 ] }] } };
+        //NFCService.onNFCTag(mockEvent);
       }
 
     });
