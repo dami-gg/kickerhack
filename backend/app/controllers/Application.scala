@@ -53,7 +53,7 @@ class Application extends Controller {
     Player(UserId(3), Attack, Away), Player(UserId(4), Defense, Away))
   val mockGame = Game(GameId(999), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = List(mockGame)
-  def getGames = Action(Ok(JsObject(Map("games" -> Json.toJson(Games(mockGames))))))
+  def getGames = Action(Ok(JsObject(Map("games" -> Json.toJson(mockGames)))))
   def getGame(gameId: Long) = Action {
     if (mockTables contains gameId) {
       val table = mockTables(gameId)
