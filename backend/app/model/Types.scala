@@ -4,17 +4,18 @@ import java.util.UUID
 
 import org.joda.time.DateTime
 import play.api.libs.json._
+import slick.lifted.MappedTo
 
-sealed abstract class ID(val value: Option[Long])
-case class UserId(override val value: Option[Long]) extends ID(value)
-case class TableId(override val value: Option[Long]) extends ID(value)
-case class GameId(override val value: Option[Long]) extends ID(value)
+sealed abstract class ID(val value: Long) extends MappedTo[Long]
+case class UserId(override val value: Long) extends ID(value)
+case class TableId(override val value: Long) extends ID(value)
+case class GameId(override val value: Long) extends ID(value)
 
 
-case class User(id: UserId, name: String)
+case class User(id: Option[UserId], name: String)
 case class Users(users: List[User])
 case class Color(color: String)
-case class Table(id: TableId, name: String, building: String, floor: String, colorHome: Color, colorAway: Color, lastGoalScored: DateTime)
+case class Table(id: Option[TableId], name: String, building: String, floor: String, colorHome: Color, colorAway: Color, lastGoalScored: DateTime)
 case class Tables(tables: List[Table])
 
 sealed trait Position
@@ -26,7 +27,7 @@ case object Home extends Side
 case object Away extends Side
 
 case class Player(user: UserId, position: Position, side: Side)
-case class Game(id: GameId, tableId: TableId, players: List[Player], goalsHome: Int, goalsAway: Int,
+case class Game(id: Option[GameId], tableId: TableId, players: List[Player], goalsHome: Int, goalsAway: Int,
                 start: DateTime, end: DateTime)
 case class Games(games: List[Game])
 

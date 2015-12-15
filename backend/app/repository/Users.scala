@@ -1,6 +1,6 @@
 package repository
 
-import model.{User}
+import model.{UserId, User}
 import play.api.db.DB
 
 import slick.driver.PostgresDriver.api._
@@ -11,7 +11,7 @@ import play.api.Play.current
 import scala.concurrent.Future
 
 class Users(tag: Tag) extends Table[User](tag, Some("kicker"), "user") {
-  def id = column[Long]("user_id", O.PrimaryKey, O.AutoInc)
+  def id = column[UserId]("user_id")
   def name = column[String]("name")
 
   override def * = (id.?, name) <> ((User.apply _).tupled, User.unapply)

@@ -15,8 +15,8 @@ class Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  val mockUsers = Map(1l-> User(UserId(1), "Daniel"), 2l -> User(UserId(2), "Paul"), 3l -> User(UserId(3), "Salomé"), 4l -> User(UserId(4), "Roman"))
-  val mockTable = model.Table(id = TableId(567), name = "theTable", colorHome = Color("Blue"), building = "BMO", floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
+  val mockUsers = Map(1l-> User(Some(UserId(1)), "Daniel"), 2l -> User(Some(UserId(2)), "Paul"), 3l -> User(Some(UserId(3)), "Salomé"), 4l -> User(Some(UserId(4)), "Roman"))
+  val mockTable = model.Table(id = Some(TableId(567)), name = "theTable", colorHome = Color("Blue"), building = "BMO", floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
   val mockTables = Map(567l -> mockTable)
 
   //
@@ -51,7 +51,7 @@ class Application extends Controller {
   //
   val mockPlayers = List(Player(UserId(1), Attack, Home), Player(UserId(2), Defense, Home),
     Player(UserId(3), Attack, Away), Player(UserId(4), Defense, Away))
-  val mockGame = Game(GameId(999), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
+  val mockGame = Game(Some(GameId(999)), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = List(mockGame)
   def getGames = Action(Ok(Json.toJson(Games(mockGames))))
   def getGame(gameId: Long) = Action {

@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import model.User
+import model.{UserId, User}
 import play.api.libs.json.Json
 import repository.UserRepository
 import play.api.mvc._
