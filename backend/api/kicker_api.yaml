@@ -18,6 +18,16 @@ consumes:
   - application/json
 basePath: /
 paths:
+  /nfc-data/{uuid}:
+    get:
+      summary: returns data for the NFC tag with the given UUID
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/nfc_data'
+        404:
+          description: not found
   /tables:
     get:
       summary: Lists all available tables
@@ -60,10 +70,6 @@ paths:
     put:
       summary: registers a player with the current game. If no game exists, it is created.
       parameters:
-        - name: user_id
-          in: body
-          required: true
-          description: The user ID
         - name: side
           in: body
           required: true
@@ -240,4 +246,15 @@ definitions:
       name:
         type: string
       account_info:
+        type: string
+
+  nfc_data:
+    properties:
+      uuid:
+        type: string
+      table_id:
+        type: string
+      side:
+        type: string
+      position:
         type: string

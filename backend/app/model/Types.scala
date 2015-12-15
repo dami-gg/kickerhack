@@ -25,4 +25,20 @@ object JsonConversions {
     override def writes(o: Color): JsValue = JsString(o.color)
   }
   implicit val tableWrites = Json.writes[Table]
+  implicit val PositionWrites = new Writes[Position] {
+    override def writes(o: Position): JsValue = JsString(o match {
+      case Defense => "defense"
+      case Attack => "attack"
+    })
+  }
+
+  implicit val sideWrites = new Writes[Side] {
+    override def writes(o: Side): JsValue = JsString(o match {
+      case Home => "home"
+      case Away => "away"
+    })
+  }
+
+  implicit val playerWrites = Json.writes[Player]
+  implicit val gameWrites = Json.writes[Game]
 }
