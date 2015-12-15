@@ -21,13 +21,16 @@ angular.module('main')
 
   this.onNFCTag = function (tagEvent) {
     var message = tagEvent.tag.ndefMessage[0];
-    $state.go('main.check-in', self.decodePayload(message.payload));
+    var stateParams = self.hasNFC() 
+      ? self.decodePayload(message.payload) 
+      : { tagId: 'unknown' };
+    $state.go('main.check-in', stateParams);  
   };
 
   this.decodePayload = function (payload) {
     var value = nfc.bytesToString(payload);
-    $log.log(value);
-    return { table: 1, position: 3 };
+    $log.log('Parsing NDEF payload: ' + value);
+    return { tagId: value };
   };
 
 });
