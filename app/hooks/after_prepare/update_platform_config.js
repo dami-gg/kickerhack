@@ -314,7 +314,19 @@ var platformConfig = (function () {
             childSelector += '[@android:name=\'' + data.attrib['android:name'] + '\']';
           }
 
-          childEl = parentEl.find(childSelector);
+          // there can be multiple intent-filters too...
+          if (childSelector === 'intent-filter') {
+            childSelector += '[@android:label=\'' + data.attrib['android:label'] + '\']';
+          }
+
+          childEl = null;
+          try {
+            childEl = parentEl.find(childSelector);
+          } catch (e) {
+            console.log(e);
+            throw e;
+          }
+
           // if child element doesnt exist, create new element
           if (!childEl) {
             childEl = new et.Element(item.destination);

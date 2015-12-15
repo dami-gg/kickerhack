@@ -1,8 +1,7 @@
 'use strict';
 angular.module('main')
 .service('NFCService', function ($log, $timeout) {
-
-  $log.log('Hello from the NFC service');
+  /*global nfc:true*/
 
   this.hasNFC = function () {
     return (typeof nfc !== 'undefined');
@@ -19,6 +18,7 @@ angular.module('main')
   };
 
   this.onNFCTag = function (tag) {
+    // TODO: notify whoever is interested...
     $log.log(JSON.stringify(nfcEvent.tag, null, 4));
   };
 

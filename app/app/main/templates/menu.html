@@ -38,9 +38,11 @@
         <ion-item menu-close ui-sref="main.game">
           Game
         </ion-item>
-        <ion-item menu-close ui-sref="main.check-in">
-          Check-In
-        </ion-item>
+        <ng-switch on="isIt">
+          <ion-item ng-switch-when="true" menu-close ui-sref="main.check-in">
+            Check-In
+          </ion-item>
+        </ng-switch>
         <ion-item menu-close ui-sref="main.debug">
           Debug
         </ion-item>

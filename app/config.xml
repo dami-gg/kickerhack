@@ -18,8 +18,16 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <config-file target="AndroidManifest.xml" parent="/*">
-            <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+        <config-file target="AndroidManifest.xml" parent="application/activity">
+            <intent-filter android:label="not-used">
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <data android:mimeType="application/zalandor" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter android:label="@string/launcher_name">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </config-file>
     </platform>
     <platform name="ios">
