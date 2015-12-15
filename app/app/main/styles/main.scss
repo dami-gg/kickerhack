@@ -1,3 +1,12 @@
+.card {
+  &.free { background: green; }
+  &.busy { background: red; }
+}
+
+.btn {
+  cursor: pointer;
+}
+
 /*
 To customize the look and feel of Ionic, you can override the variables
 in ionic's _variables.scss file.

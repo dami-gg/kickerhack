@@ -26,8 +26,17 @@ angular.module('main', [
           }
         }
       })
+      .state('main.locations', {
+        url: '/locations',
+        views: {
+          'pageContent': {
+            templateUrl: 'main/templates/locations.html',
+            controller: 'LocationsController as locationsCtrl'
+          }
+        }
+      })
       .state('main.tables', {
-        url: '/tables',
+        url: '/locations/:location',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/tables.html',
@@ -35,8 +44,17 @@ angular.module('main', [
           }
         }
       })
+      .state('main.table', {
+        url: '/tables/:tableId',
+        views: {
+          'pageContent': {
+            templateUrl: 'main/templates/table.html',
+            controller: 'TableController as tableCtrl'
+          }
+        }
+      })
       .state('main.game', {
-        url: '/game/:gameID',
+        url: '/game/:gameId',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/game.html',

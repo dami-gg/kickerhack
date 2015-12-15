@@ -1,0 +1,28 @@
+<ion-view view-title="Locations">
+  <ion-content>
+
+    <div ng-repeat="location in locationsCtrl.locations">
+      <div class="row responsive-md" ng-if="$even">
+        <div class="col" ng-init="locationA = locationsCtrl.locations[$index]">
+          <div class="list card floor btn" ui-sref="main.tables({location: locationA})">
+            <div class="item item-avatar">
+              <img ng-src="main/assets/images/{{locationA}}.png">
+              <h2>{{locationA}}</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" ng-if="$index+1 < locationsCtrl.locations.length"
+             ng-init="locationB = locationsCtrl.locations[$index+1]">
+          <div class="list card floor btn" ui-sref="main.tables({location: locationB})">
+            <div class="item item-avatar">
+              <img ng-src="main/assets/images/{{locationB}}.png">
+              <h2>{{locationB}}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>
