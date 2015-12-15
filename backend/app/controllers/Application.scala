@@ -26,7 +26,7 @@ class Application extends Controller with ConfigServiceImpl {
         val json = response.json
         val userId = (json \ "user" \ "id").as[Int]
         val userName = (json \ "user" \ "login").as[String]
-        callback(User(userId, userName))
+        callback(User(UserId(userId), userName))
       }
   }
 
