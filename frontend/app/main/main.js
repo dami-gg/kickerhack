@@ -62,6 +62,15 @@ angular.module('main', [
           }
         }
       })
+      .state('main.ranking', {
+        url: '/ranking',
+        views: {
+          'pageContent': {
+            templateUrl: 'main/templates/ranking.html',
+            controller: 'RankingController as rankingCtrl'
+          }
+        }
+      })
       .state('main.check-in', {
         url: '/check-in/:table/at/:position',
         views: {
@@ -91,6 +100,6 @@ angular.module('main', [
         // TODO: get rid of test code
         NFCService.onNFCTag(null);
       }
-      
+
     });
   });
