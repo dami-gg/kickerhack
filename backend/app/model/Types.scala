@@ -1,11 +1,19 @@
 package model
 
+import java.util.UUID
+
 import org.joda.time.DateTime
 import play.api.libs.json._
 
-case class User(id: Long, name: String)
+sealed abstract class ID(val value: Long)
+case class UserId(override val value: Long) extends ID(value)
+case class TableId(override val value: Long) extends ID(value)
+case class GameId(override val value: Long) extends ID(value)
+
+
+case class User(id: UserId, name: String)
 case class Color(color: String)
-case class Table(id: Long, building: String, floor: String, colorHome: Color, colorAway: Color, lastGoalScored: DateTime)
+case class Table(id: TableId, name: String, building: String, floor: String, colorHome: Color, colorAway: Color, lastGoalScored: DateTime)
 
 sealed trait Position
 case object Defense extends Position
@@ -15,16 +23,18 @@ sealed trait Side
 case object Home extends Side
 case object Away extends Side
 
-case class Player(user: User, position: Position, side: Side)
-case class Game(id: Long, table: Table, players: List[Player], goalsHome: Int, goalsAway: Int,
+case class Player(user: UserId, position: Position, side: Side)
+case class Game(id: GameId, table: Table, players: List[Player], goalsHome: Int, goalsAway: Int,
                 start: DateTime, end: DateTime)
 
+case class NfcData(uuid: UUID, tableId: TableId, side: Side, position: Position)
+
 object JsonConversions {
+  implicit val idWrites = new Writes[ID] { override def writes(o: ID): JsValue = JsNumber(o.value) }
   implicit val userWrites = Json.writes[User]
-  implicit val colorWrites = new Writes[Color] {
-    override def writes(o: Color): JsValue = JsString(o.color)
-  }
+  implicit val colorWrites = new Writes[Color] { override def writes(o: Color): JsValue = JsString(o.color) }
   implicit val tableWrites = Json.writes[Table]
+
   implicit val PositionWrites = new Writes[Position] {
     override def writes(o: Position): JsValue = JsString(o match {
       case Defense => "defense"
@@ -41,4 +51,6 @@ object JsonConversions {
 
   implicit val playerWrites = Json.writes[Player]
   implicit val gameWrites = Json.writes[Game]
+  implicit val uuidWrites = new Writes[UUID] { override def writes(o: UUID): JsValue = JsString(o.toString) }
+  implicit val nfcDataWrites = Json.writes[NfcData]
 }
