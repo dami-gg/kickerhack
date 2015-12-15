@@ -1,7 +1,7 @@
 package model
 
 import org.joda.time.DateTime
-import play.api.libs.json.{JsResult, JsValue, Format, Json}
+import play.api.libs.json._
 
 case class User(id: Long, name: String)
 case class Color(color: String)
@@ -21,6 +21,8 @@ case class Game(id: Long, table: Table, players: List[Player], goalsHome: Int, g
 
 object JsonConversions {
   implicit val userWrites = Json.writes[User]
-  implicit val colorWrites = Json.writes[Color]
+  implicit val colorWrites = new Writes[Color] {
+    override def writes(o: Color): JsValue = JsString(o.color)
+  }
   implicit val tableWrites = Json.writes[Table]
 }

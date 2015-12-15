@@ -1,6 +1,7 @@
 package controllers
 
 import model.{Table, Color, User, Player}
+import org.joda.time.DateTime
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -13,7 +14,7 @@ class Application extends Controller {
   }
 
   val mockUsers = List(User(1, "Daniel"), User(2, "Paul"), User(3, "Salomé"), User(4, "Roman"))
-  val mockTable = model.Table(567, "theTable", colorHome = Color("Blue"), colorAway = Color("Red"))
+  val mockTable = model.Table(567, "theTable", colorHome = Color("Blue"), floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
   val mockTables = Map("theTable" -> mockTable)
 
   def getPlayers = Action {
