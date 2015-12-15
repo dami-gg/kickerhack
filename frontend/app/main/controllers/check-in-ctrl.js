@@ -1,9 +1,12 @@
 'use strict';
 angular.module('main')
-  .controller('CheckInController', ['$http', '$timeout', '$stateParams', '$log', 
-    function ($http, $timeout, $stateParams, $log) {
+  .controller('CheckInController', ['Config', '$http', '$timeout', '$stateParams', '$log', 
+    function (Config, $http, $timeout, $stateParams, $log) {
     var self = this;
-    var tagDataUrl = 'https://kicker-server.hackweek.zalan.do/nfc-data/' + this.tagId;
+    var baseUrl = Config.ENV.SERVER_URL;
+    var tagDataUrl = baseUrl 
+      + '/nfc-data/' 
+      + this.tagId;
 
     this.tagId = $stateParams.tagId;
 
@@ -18,7 +21,8 @@ angular.module('main')
     this.checkIn = function () {
       $log.log('go..');
       
-      var registerUrl = 'https://kicker-server.hackweek.zalan.do/tables/' 
+      var registerUrl = baseUrl 
+        + '/tables/' 
         + self.tagData.table_id 
         + '/current_game';
       var registerData = self.tagData;
