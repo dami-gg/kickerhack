@@ -1,0 +1,243 @@
+swagger: '2.0'
+info:
+  title: Kicker 2.0
+  description: |
+    The service handles kicker games.
+  version: "0.1.0"
+  contact:
+    name: Zalando
+    email: kicker@zalando.de
+    url: https://techwiki.zalando.net/display/DT/WAREHOUSE+ALGORITHMS
+host: server.kicker.zalan.do
+schemes:
+  - https
+produces:
+  - application/json
+  - application/problem+json
+consumes:
+  - application/json
+basePath: /
+paths:
+  /tables:
+    get:
+      summary: Lists all available tables
+      description: |
+        This returns all the tables in Zalando.
+      responses:
+        200:
+          description: List of available tables
+          schema:
+            $ref: '#/definitions/tables'
+  /tables/{table_id}:
+    get:
+      summary: get information on one specific table
+      description: |
+        This returns more info on a specific table
+      responses:
+        200:
+          description: This returns more info on a specific table
+          schema:
+              $ref: '#/definitions/table'
+        404:
+          description: not found
+
+  /tables/{table_id}/current_game:
+    get:
+      summary: get the game currently played on this table
+      responses:
+        200:
+          description: the game currently in progress
+          schema:
+              $ref: '#/definitions/game'
+        404:
+          description: no game in progress
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/error'
+
+
+    put:
+      summary: registers a player with the current game. If no game exists, it is created.
+      parameters:
+        - name: user_id
+          in: body
+          required: true
+          description: The user ID
+        - name: side
+          in: body
+          required: true
+          description: home or away
+        - name: position
+          in: body
+          required: true
+          description: defense or attack
+      responses:
+        201:
+          description: A game has been created and the user has been registered with the game.
+        200:
+          description: The user has been registered with the current game.
+
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/error'
+  /tables/{table_id}/sides/{side}/goal:
+    post:
+      summary: Score a goal for the given side.
+      responses:
+        201:
+          description: The goal has been taken in account
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/error'
+  /games:
+    get:
+      summary: A list of all games
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/games'
+
+  /games/{game_id}:
+    get:
+      summary: All the information about one game
+      responses:
+        200:
+          description: This shows the state of the game.
+          schema:
+              $ref: '#/definitions/game'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/error'
+  /users:
+    get:
+      summary: Shows all the users with a minimal view.
+      responses:
+        200:
+          description: this shows a minimal view of all the users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/user'
+
+  /users/{user_id}:
+    get:
+      summary: Shows all the info about one player.
+      responses:
+        200:
+          description: all info about the player
+          schema:
+              $ref: '#/definitions/user'
+        404:
+          description: not found
+
+  /me:
+    get:
+      summary: gets information about the logged in user
+      responses:
+        302:
+          description: redirects to the homepage of the user
+          #schema:
+          #    $ref: '#/definitions/user'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/error'
+  /me/sides/{side}/goal:
+    post:
+      summary: increment the goal count for the given side
+      responses:
+        201:
+          description: The goal has been taken in account
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/error'
+    delete:
+      summary: decrement the goal count for the given side
+      responses:
+        201:
+          description: the goal counter has been decremented
+        403:
+          description: decrementing is not possible
+
+
+definitions:
+  error:
+    properties:
+      type:
+        type: string
+      title:
+        type: string
+      status:
+        type: integer
+        format: int32
+      detail:
+        type: string
+
+  game:
+    properties:
+      game_id:
+        type: string
+      table_id:
+        type: string
+      goals_home:
+        type: number
+      goals_away:
+        type: number
+      started:
+        type: timestamp
+      last_goal_scored:
+        type: timestamp
+      players:
+        type: array
+        items:
+          $ref: '#/definitions/player'
+  player:
+    properties:
+      user_id:
+        type: string
+      position:
+        type: string
+      side:
+        type: string
+  table:
+    properties:
+      id:
+        type: string
+      building:
+        type: string
+      floor:
+        type: string
+      home:
+        type: string
+      away:
+        type: string
+      last_goal_scored:
+        type: timestamp
+  tables:
+    properties:
+      tables:
+        type: array
+        items:
+          $ref: '#/definitions/table'
+  games:
+    properties:
+      games:
+        type: array
+        items:
+          $ref: '#/definitions/game'
+
+
+  user:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      account_info:
+        type: string
