@@ -1,47 +1,105 @@
 'use strict';
+
 angular.module('main')
-  .service('TablesService', function () {
+  .service('TablesService', ['$http', function ($http) {
 
-    var json = '[{"id":123,"building":"BNB","floor":1,"home":"red","away":"blue","last_score":"2015-12-14T15:20+01:00","current_game":{"game_id":234,"table_id":123,"teams":[{"color":"red","offense_player_id":123,"defense_player_id":123},{"color":"blue","offense_player_id":null,"defense_player_id":125}]}},{"id":124,"building":"BMO","floor":1,"home":"red","away":"blue","last_score":"2015-12-14T15:20+01:00","current_game":null},{"id":456,"building":"BMO","floor":2,"home":"red","away":"blue","last_score":"2015-12-14T15:20+01:00","current_game":{"game_id":436,"table_id":456,"teams":[{"color":"red","offense_player_id":456,"defense_player_id":457},{"color":"blue","offense_player_id":null,"defense_player_id":125}]}}]';
+    var vm = this;
 
-    this.getTables = function () {
-      return JSON.parse(json);
+    var allTablesJson = '[{"id":123,"building":"BNB","floor":1,"home":"red","away":"blue","last_goald_scored":"2015-12-14T15:20+01:00"},{"id":124,"building":"BMO","floor":1,"home":"red","away":"blue","last_goald_scored":"2015-12-14T15:20+01:00"},{"id":456,"building":"BMO","floor":2,"home":"red","away":"blue","last_goald_scored":"2015-12-14T15:20+01:00"}]';
+
+    vm.getTables = function () {
+      return $http.get('/tables')
+        .then(
+          function (response) {
+            return response.data;
+          },
+          function (error) {
+            // TODO Handle error
+            return null;
+          });
     };
 
-    this.getLocations = function () {
-      var tables = this.getTables();
+    vm.getTableById = function (tableId) {
+      return $http.get('/tables/' + tableId)
+        .then(
+          function (response) {
+            return response.data;
+          },
+          function (error) {
+            // TODO Handle error
+            return null;
+          });
+    };
+
+    vm.getLocations = function () {
       var locations = [];
-
-      tables.forEach(function (table) {
-        if (locations.indexOf(table.building) === -1) {
-          locations.push(table.building);
-        }
-      });
-
-      return locations.sort(compare);
+      var tables = [];
+      return vm.getTables()
+        .then(
+          function (response) {
+            if (response !== null) {
+              tables = response;
+            }
+            else {
+              // TODO Change when API is ready
+              // vm.locations = {};
+              var parsedJson = JSON.parse(allTablesJson);
+              tables = parsedJson;
+            }
+            tables.forEach(function (table) {
+              if (locations.indexOf(table.building) === -1) {
+                locations.push(table.building);
+              }
+            });
+            return locations.sort(compare);
+          },
+          function (error) {
+            // TODO Handle error
+            return null;
+          }
+        );
     };
 
-    this.getTablesByLocation = function (location) {
-      var tables = this.getTables();
+    vm.getTablesByLocation = function (location) {
+      var tables = [];
       var locationTablesByFloor = [];
       var aux;
 
-      tables.forEach(function (table) {
-        if (table.building === location) {
-          aux = locationTablesByFloor.find(function (tablesInFloor) {
-            return tablesInFloor.floor === table.floor;
-          });
-          if (aux) {
-            aux.tables.push(table);
-          }
-          else {
-            aux = {floor: table.floor, tables: [table]};
-            locationTablesByFloor.push(aux);
-          }
-        }
-      });
+      return vm.getTables()
+        .then(
+          function(response) {
+            if (response !== null) {
+              tables = response;
+            }
+            else {
+              // TODO Change when API is ready
+              // vm.locations = {};
+              var parsedJson = JSON.parse(allTablesJson);
+              tables = parsedJson;
+            }
 
-      return locationTablesByFloor;
+            tables.forEach(function (table) {
+              if (table.building === location) {
+                aux = locationTablesByFloor.find(function (tablesInFloor) {
+                  return tablesInFloor.floor === table.floor;
+                });
+                if (aux) {
+                  aux.tables.push(table);
+                }
+                else {
+                  aux = {floor: table.floor, tables: [table]};
+                  locationTablesByFloor.push(aux);
+                }
+              }
+            });
+
+            return locationTablesByFloor;
+          },
+          function(error) {
+            // TODO Handle error
+            return null;
+          }
+        );
     };
 
     function compare (a, b) {
@@ -52,6 +110,5 @@ angular.module('main')
         return 1;
       }
       return 0;
-    }
-  })
-;
+    };
+  }]);
