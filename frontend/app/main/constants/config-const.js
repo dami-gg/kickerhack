@@ -6,7 +6,7 @@ angular.module('main')
   // https://github.com/mwaylabs/generator-m-ionic#gulp-environment
   ENV: {
     /*inject-env*/
-    'SERVER_URL': 'https://kicker-server.hackweek.zalan.do'
+    'SERVER_URL': 'https://kicker-server.hackweek.zalan.do/'
     /*endinject*/
   },
 
