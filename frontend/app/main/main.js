@@ -67,7 +67,7 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router'])
         }
       })
       .state('main.check-in', {
-        url: '/check-in/:table/at/:position',
+        url: '/check-in/:tagId',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/check-in.html',
@@ -92,6 +92,8 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router'])
         NFCService.registerListener();
       } else {
         $log.log('No NFC on this device.');
+        var mockEvent = { tag: { ndefMessage: [ { payload: [ 94 ] }] } };
+        //NFCService.onNFCTag(mockEvent);
       }
 
     });

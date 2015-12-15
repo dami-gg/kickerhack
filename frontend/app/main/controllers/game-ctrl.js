@@ -1,21 +1,30 @@
 'use strict';
 
 angular.module('main')
-  .controller('GameController', ['$http', function ($http) {
+  .controller('GameController', ['$stateParams', 'GamesService',
+    function ($stateParams, GamesService) {
 
-    var json = '[{"id":1,"name":"Team A","players":[{"id":1,"name":"Player A1"},{"id":2,"name":"Player A2"}]},{"id":2,"name":"Team B","players":[{"id":3,"name":"Player B1"},{"id":4,"name":"Player B2"}]}]';
+      var singleGameJson = '{"game_id":1,"table_id":1,"goals_home":0,"goals_away":0,"started":"2015-12-14T15:20+01:00","last_goal_scored":"2015-12-14T15:20+03:00","players":[{"user_id":1,"position":"attack","side":"home"},{"user_id":2,"position":"defense","side":"home"},{"user_id":3,"position":"attack","side":"away"},{"user_id":4,"position":"defense","side":"away"}]}';
 
-    this.teams = JSON.parse(json);
+      var vm = this;
 
-    this.game = {
-      teamA: this.teams[0].name,
-      teamB: this.teams[1].name,
-      scoreA: 0,
-      scoreB: 0
-    };
+      vm.gameId = $stateParams.gameId;
 
-    this.scoreGoal = function () {
+      GamesService.getGameById(this.gameId)
+        .then(function (response) {
+          if (response === null) {
+            // TODO Change when API is ready
+            // vm.game = {};
+            var parsedJson = JSON.parse(singleGameJson);
+            vm.game = parsedJson;
+          }
+          else {
+            vm.game = response.data;
+          }
+        });
 
-    };
-  }]);
+      this.scoreGoal = function () {
+
+      };
+    }]);
 

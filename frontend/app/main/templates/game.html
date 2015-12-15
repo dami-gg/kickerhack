@@ -1,15 +1,15 @@
-<ion-view view-title="{{gameCtrl.game.teamA}} vs {{gameCtrl.game.teamB}}">
+<ion-view view-title="Game {{gameCtrl.game.game_id}} @ {{gameCtrl.game.table_id}}">
   <ion-content class="padding">
 
     <div class="list card">
       <div>
-        <p>{{gameCtrl.game.teamA}}</p>
-        <p>{{gameCtrl.game.scoreA}}</p>
+        <p>{{gameCtrl.game.players[0].user_id}} && {{gameCtrl.game.players[1].user_id}}</p>
+        <p>{{gameCtrl.game.goals_home}}</p>
       </div>
 
       <div>
-        <p>{{gameCtrl.game.teamB}}</p>
-        <p>{{gameCtrl.game.scoreB}}</p>
+        <p>{{gameCtrl.game.players[2].user_id}} && {{gameCtrl.game.players[3].user_id}}</p>
+        <p>{{gameCtrl.game.goals_away}}</p>
       </div>
     </div>
 
