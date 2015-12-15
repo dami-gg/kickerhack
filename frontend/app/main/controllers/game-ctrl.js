@@ -1,32 +1,9 @@
 'use strict';
 
 angular.module('main')
-  .controller('GameController', function ($http) {
+  .controller('GameController', ['$http', function ($http) {
 
-    this.teams = {};
-    this.game = {};
-
-    var json = '[{' +
-      '"id": 1,' +
-      '"name": "Team A",' +
-      '"players": [{' +
-      '"id": 1,' +
-      ' "name": "Player A1"' +
-      '}, {' +
-      '"id": 2,' +
-      ' "name": "Player A2"' +
-      '}]' +
-      '}, {' +
-      '"id": 2,' +
-      '"name": "Team B",' +
-      '"players": [{' +
-      '"id": 3,' +
-      ' "name": "Player B1"' +
-      '}, {' +
-      '"id": 4,' +
-      ' "name": "Player B2"' +
-      '}]' +
-      '}]';
+    var json = '[{"id":1,"name":"Team A","players":[{"id":1,"name":"Player A1"},{"id":2,"name":"Player A2"}]},{"id":2,"name":"Team B","players":[{"id":3,"name":"Player B1"},{"id":4,"name":"Player B2"}]}]';
 
     this.teams = JSON.parse(json);
 
@@ -37,8 +14,8 @@ angular.module('main')
       scoreB: 0
     };
 
-    this.scoreGoal = function() {
+    this.scoreGoal = function () {
 
     };
-  });
+  }]);
 
