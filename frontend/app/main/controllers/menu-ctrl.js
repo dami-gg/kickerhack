@@ -1,13 +1,9 @@
 'use strict';
 angular.module('main')
-  .controller('MenuCtrl', function ($scope, NFCService, $cordovaOauth) {
+  .controller('MenuCtrl', function ($log, $scope, NFCService, Config, $cordovaOauth) {
     $scope.hasNFC = NFCService.hasNFC();
 
     var self = this;
-
-    var clientId = '8ffed888ba9f8bc1f283';
-    var clientSecret = 'd880a5aa2bf3edafdfe28d3a1a2959fc5dff2ef4';
-    var options = { redirect_uri: 'https://kicker-server.hackweek.zalan.do/' };
     
     this.parseQuery = function (qstr) {
       var query = {};
@@ -19,12 +15,14 @@ angular.module('main')
       return query;
     }
 
-    $cordovaOauth.github(clientId, clientSecret, ["email"], options)
+    var options = { redirect_uri: Config.AUTH.CALLBACK_URL };
+    $cordovaOauth.github(Config.AUTH.CLIENT_ID, Config.AUTH.CLIENT_SECRET, ["email"], options)
       .then(function(result) {
         var data = self.parseQuery(result);
         var accessToken = data.access_token;
+        $log.log(accessToken);
       }, function(error) {
-        console.log("Unable to auth with GitHub: " + error);
+        $log.log("Unable to auth with GitHub: " + error);
       });
 
   });
