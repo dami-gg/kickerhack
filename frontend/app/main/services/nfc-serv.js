@@ -27,10 +27,7 @@ angular.module('main')
   this.decodePayload = function (payload) {
     var value = nfc.bytesToString(payload);
     $log.log('Parsing NDEF payload: ' + value);
-
-    value = "{\"table\": 4, \"position\": 0}";
-
-    return JSON.parse(value);
+    return { tagId: value };
   };
 
 });

@@ -67,7 +67,7 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router'])
         }
       })
       .state('main.check-in', {
-        url: '/check-in/:table/at/:position',
+        url: '/check-in/:tagId',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/check-in.html',
