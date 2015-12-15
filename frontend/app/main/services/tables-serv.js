@@ -30,7 +30,7 @@ angular.module('main')
         if (table.building === location) {
           aux = locationTablesByFloor.find(function(tablesInFloor) {
             return tablesInFloor.floor === table.floor;
-          })
+          });
           if (aux) {
             aux.tables.push(table);
           }
