@@ -2,7 +2,7 @@
 angular.module('main')
 .controller('DebugCtrl', function (Main, Config) {
 
- // bind data from services
+  // bind data from services
   this.someData = Main.someData;
   this.ENV = Config.ENV;
   this.BUILD = Config.BUILD;

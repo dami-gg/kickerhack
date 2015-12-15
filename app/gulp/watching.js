@@ -36,12 +36,12 @@ gulp.task('watch', ['inject-all'], function () {
     .concat(paths.templates);
 
   // start linting and watching
-  gulp.start('linting');
+  //gulp.start('linting');
   gulp.watch(watchFiles, function (event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     if (event.type === 'changed') {
       bs.reload();
-      gulp.start('linting');
+      //gulp.start('linting');
     }
     else { // added or deleted
       // inject in index (implicitly reloads)

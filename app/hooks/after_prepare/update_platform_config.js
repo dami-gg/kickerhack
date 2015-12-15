@@ -128,7 +128,8 @@ var platformConfig = (function () {
         destination: 'android:windowSoftInputMode'
       }
     },
-    'ios': {}
+    'ios': {},
+    'browser': {}
   };
   var configXmlData, preferencesData;
 
@@ -313,7 +314,19 @@ var platformConfig = (function () {
             childSelector += '[@android:name=\'' + data.attrib['android:name'] + '\']';
           }
 
-          childEl = parentEl.find(childSelector);
+          // there can be multiple intent-filters too...
+          if (childSelector === 'intent-filter') {
+            childSelector += '[@android:label=\'' + data.attrib['android:label'] + '\']';
+          }
+
+          childEl = null;
+          try {
+            childEl = parentEl.find(childSelector);
+          } catch (e) {
+            console.log(e);
+            throw e;
+          }
+
           // if child element doesnt exist, create new element
           if (!childEl) {
             childEl = new et.Element(item.destination);
@@ -360,9 +373,15 @@ var platformConfig = (function () {
 // Main
 (function () {
   if (rootdir) {
+    var supportedPlatforms = ['android', 'ios'];
+
     // go through each of the platform directories that have been prepared
     var platforms = _.filter(fs.readdirSync('platforms'), function (file) {
       return fs.statSync(path.resolve('platforms', file)).isDirectory();
+    });
+
+    platforms = _.filter(platforms, function (platform) {
+      return supportedPlatforms.indexOf(platform) !== -1;
     });
 
     _.each(platforms, function (platform) {

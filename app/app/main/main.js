@@ -62,6 +62,15 @@ angular.module('main', [
           }
         }
       })
+      .state('main.check-in', {
+        url: '/check-in',
+        views: {
+          'pageContent': {
+            templateUrl: 'main/templates/check-in.html',
+            controller: 'CheckInController as checkInCtrl'
+          }
+        }
+      })
       .state('main.debug', {
         url: '/debug',
         views: {
@@ -71,4 +80,15 @@ angular.module('main', [
           }
         }
       });
+  })
+  .run(function ($ionicPlatform, $log, NFCService) {
+    $ionicPlatform.ready(function () {
+
+      if (NFCService.hasNFC()) {
+        NFCService.initialize();
+      } else {
+        $log.log('No NFC on this device.');
+      }
+      
+    });
   });
