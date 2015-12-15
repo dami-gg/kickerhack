@@ -1,5 +1,5 @@
 'use strict';
-angular.module('main', ['ionic', 'ngCordova', 'ui.router'])
+angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
   .config(function ($stateProvider, $urlRouterProvider) {
 
     // ROUTING with ui.router
