@@ -15,24 +15,29 @@ class Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  val mockUsers = List(User(UserId(1), "Daniel"), User(UserId(2), "Paul"), User(UserId(3), "Salomé"), User(UserId(4), "Roman"))
+  val mockUsers = Map(1l-> User(UserId(1), "Daniel"), 2l -> User(UserId(2), "Paul"), 3l -> User(UserId(3), "Salomé"), 4l -> User(UserId(4), "Roman"))
   val mockTable = model.Table(id = TableId(567), name = "theTable", colorHome = Color("Blue"), building = "BMO", floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
-  val mockTables = Map("theTable" -> mockTable)
+  val mockTables = Map(567l -> mockTable)
 
   //
   // Users
   //
-  def getUsers = Action {
-    request => Ok("A list of players: " + Json.toJson(mockUsers))
-  }
+  def getUsers = Action(Ok(Json.toJson(Users(mockUsers.values.toList))))
 
-  def getUser(playerId: String) = Action(NotFound)
+  def getUser(userId: Long) = Action {
+    if (mockUsers contains userId) {
+      Ok(Json.toJson(mockUsers(userId)))
+    } else {
+      NotFound
+    }
+  }
 
   //
   // Tables
   //
-  def getTables() = play.mvc.Results.TODO
-  def getTable(tableId: String) = Action {
+  def getTables = Action(Ok(Json.toJson(Tables(mockTables.values.toList))))
+
+  def getTable(tableId: Long) = Action {
     if (mockTables contains tableId) {
       val table = mockTables(tableId)
       Ok(Json.toJson(table))
@@ -44,12 +49,25 @@ class Application extends Controller {
   //
   // Games
   //
-  def getGames() = play.mvc.Results.TODO
-  def getGame(gameId: String) = play.mvc.Results.TODO
+  val mockPlayers = List(Player(UserId(1), Attack, Home), Player(UserId(2), Defense, Home),
+    Player(UserId(3), Attack, Away), Player(UserId(4), Defense, Away))
+  val mockGame = Game(GameId(999), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
+  val mockGames = List(mockGame)
+  def getGames = Action(Ok(Json.toJson(Games(mockGames))))
+  def getGame(gameId: Long) = Action {
+    if (mockTables contains gameId) {
+      val table = mockTables(gameId)
+      Ok(Json.toJson(table))
+    } else {
+      NotFound("Not found: " + gameId)
+    }
+  }
 
   //
   // NFC data
   //
+  val mockNfcData = NfcData()
+  def getNfcData = Action
   def getNfcData(uuid: UUID) = Action {
     val nfcData = NfcData(uuid, TableId(567), Home, Attack)
 
