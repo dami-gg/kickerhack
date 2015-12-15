@@ -97,8 +97,6 @@ angular.module('main', [
         NFCService.registerListener();
       } else {
         $log.log('No NFC on this device.');
-        // TODO: get rid of test code
-        NFCService.onNFCTag(null);
       }
 
     });
