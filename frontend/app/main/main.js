@@ -1,10 +1,5 @@
 'use strict';
-angular.module('main', [
-    'ionic',
-    'ngCordova',
-    'ui.router',
-    // TODO: load other modules selected during generation
-  ])
+angular.module('main', ['ionic', 'ngCordova', 'ui.router'])
   .config(function ($stateProvider, $urlRouterProvider) {
 
     // ROUTING with ui.router
@@ -62,6 +57,15 @@ angular.module('main', [
           }
         }
       })
+      .state('main.ranking', {
+        url: '/ranking',
+        views: {
+          'pageContent': {
+            templateUrl: 'main/templates/ranking.html',
+            controller: 'RankingController as rankingCtrl'
+          }
+        }
+      })
       .state('main.check-in', {
         url: '/check-in/:table/at/:position',
         views: {
@@ -89,6 +93,6 @@ angular.module('main', [
       } else {
         $log.log('No NFC on this device.');
       }
-      
+
     });
   });

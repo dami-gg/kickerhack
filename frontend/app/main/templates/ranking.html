@@ -1,0 +1,35 @@
+<ion-view view-title="Ranking">
+  <ion-content>
+
+    <label class="item item-input item-select order-filters">
+      <div class="input-label">
+        Order by
+      </div>
+      <select ng-model="rankingCtrl.orderByFilter">
+        <option value="name">Player</option>
+        <option value="-wins">Wins</option>
+        <option value="-losses">Losses</option>
+        <option value="-goals">Goals</option>
+        <option value="-points" selected>Total points</option>
+      </select>
+    </label>
+
+    <div class="row header">
+      <div class="col col-10"></div>
+      <div class="col">Player</div>
+      <div class="col">Wins</div>
+      <div class="col">Losses</div>
+      <div class="col">Goals</div>
+      <div class="col">Points</div>
+    </div>
+
+    <div class="row" ng-repeat="player in rankingCtrl.ranking | orderBy: rankingCtrl.orderByFilter">
+      <div class="col col-10">{{$index+1}}</div>
+      <div class="col">{{player.name}}</div>
+      <div class="col">{{player.wins}}</div>
+      <div class="col">{{player.losses}}</div>
+      <div class="col">{{player.goals}}</div>
+      <div class="col">{{player.points}}</div>
+    </div>
+  </ion-content>
+</ion-view>
