@@ -1,13 +1,13 @@
 'use strict';
 angular.module('main')
-.service('NFCService', function ($log, $timeout) {
+.service('NFCService', function ($state, $log) {
   /*global nfc:true*/
 
   this.hasNFC = function () {
     return (typeof nfc !== 'undefined');
   };
 
-  this.initialize = function () {
+  this.registerListener = function () {
     $log.log('Initializing NFC...');
 
     nfc.addNdefListener(this.onNFCTag, function () {
@@ -17,9 +17,10 @@ angular.module('main')
     });
   };
 
-  this.onNFCTag = function (tag) {
+  this.onNFCTag = function (event) {
     // TODO: notify whoever is interested...
-    $log.log(JSON.stringify(nfcEvent.tag, null, 4));
+    //$log.log(JSON.stringify(event, null, 4));
+    $state.go('main.check-in', { table: 1, position: 3 });
   };
 
 });

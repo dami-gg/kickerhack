@@ -45,7 +45,7 @@ angular.module('main', [
         }
       })
       .state('main.check-in', {
-        url: '/check-in',
+        url: '/check-in/:table/at/:position',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/check-in.html',
@@ -67,9 +67,11 @@ angular.module('main', [
     $ionicPlatform.ready(function () {
 
       if (NFCService.hasNFC()) {
-        NFCService.initialize();
+        NFCService.registerListener();
       } else {
         $log.log('No NFC on this device.');
+        // TODO: get rid of test code
+        NFCService.onNFCTag(null);
       }
       
     });
