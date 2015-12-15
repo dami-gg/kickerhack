@@ -5,7 +5,7 @@ import java.util.UUID
 import model._
 import org.joda.time.DateTime
 import play.api._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import model.JsonConversions._
 
@@ -22,7 +22,7 @@ class Application extends Controller {
   //
   // Users
   //
-  def getUsers = Action(Ok(Json.toJson(Users(mockUsers.values.toList))))
+  def getUsers = Action(Ok(JsObject(Map("users" -> Json.toJson(mockUsers.values.toList)))))
 
   def getUser(userId: Long) = Action {
     if (mockUsers contains userId) {
@@ -35,7 +35,7 @@ class Application extends Controller {
   //
   // Tables
   //
-  def getTables = Action(Ok(Json.toJson(Tables(mockTables.values.toList))))
+  def getTables = Action(Ok(JsObject(Map("tables" -> Json.toJson(mockTables.values.toList)))))
 
   def getTable(tableId: Long) = Action {
     if (mockTables contains tableId) {
@@ -53,7 +53,7 @@ class Application extends Controller {
     Player(UserId(3), Attack, Away), Player(UserId(4), Defense, Away))
   val mockGame = Game(GameId(999), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = List(mockGame)
-  def getGames = Action(Ok(Json.toJson(Games(mockGames))))
+  def getGames = Action(Ok(JsObject(Map("games" -> Json.toJson(Games(mockGames))))))
   def getGame(gameId: Long) = Action {
     if (mockTables contains gameId) {
       val table = mockTables(gameId)
