@@ -1,0 +1,27 @@
+[  
+   {  
+      "id":123,
+      "building":"BMO",
+      "floor":1,
+      "home":"red",
+      "away":"blue",
+      "last_score":"2015-12-14T15:20+01:00",
+      "current_game":{  
+         "game_id":234,
+         "table_id":123,
+         "teams":[  
+            {  
+               "color":"red",
+               "offense_player_id":123,
+               "defense_player_id":123
+            },
+            {  
+               "color":"blue",
+               "offense_player_id":null,
+               "defense_player_id":125
+            }
+         ]
+      }
+   }
+]
+
