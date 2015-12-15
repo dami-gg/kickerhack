@@ -10,7 +10,11 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
-  specs2 % Test
+  specs2 % Test,
+  "com.typesafe.slick" %% "slick"      % "3.0.0-RC1",
+  "org.slf4j"           % "slf4j-nop"  % "1.6.4",
+  "postgresql"          % "postgresql" % "9.1-901.jdbc4",
+  evolutions
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

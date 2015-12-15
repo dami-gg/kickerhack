@@ -9,15 +9,15 @@ GET     /                           controllers.Application.index
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # Players
-GET     /players                    controllers.Application.getPlayers
-GET     /players/:playerId          controllers.Application.getPlayer(playerId: String)
+GET     /players                    controllers.MainController.getPlayers
+GET     /players/:playerId          controllers.MainController.getPlayer(playerId: String)
 
 # Tables
-GET     /tables                     controllers.Application.getTables
-GET     /tables/:tableId            controllers.Application.getTable(tableId: String)
+GET     /tables                     controllers.MainController.getTables
+GET     /tables/:tableId            controllers.MainController.getTable(tableId: String)
 
 # Games
-GET     /games                      controllers.Application.getGames
-GET     /games/:gameId              controllers.Application.getGame(gameId: String)
+GET     /games                      controllers.MainController.getGames
+GET     /games/:gameId              controllers.MainController.getGame(gameId: String)
 
 

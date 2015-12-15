@@ -1,9 +1,10 @@
 package model
 
+import _root_.org.joda.time.DateTime
 import org.joda.time.DateTime
 import play.api.libs.json._
 
-case class User(id: Long, name: String)
+case class User(id: Option[Long], name: String)
 case class Color(color: String)
 case class Table(id: Long, building: String, floor: String, colorHome: Color, colorAway: Color, lastGoalScored: DateTime)
 

@@ -13,7 +13,7 @@ class Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  val mockUsers = List(User(1, "Daniel"), User(2, "Paul"), User(3, "Salomé"), User(4, "Roman"))
+  val mockUsers = List(User(Some(1), "Daniel"), User(Some(2), "Paul"), User(Some(3), "Salomé"), User(Some(4), "Roman"))
   val mockTable = model.Table(567, "theTable", colorHome = Color("Blue"), floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
   val mockTables = Map("theTable" -> mockTable)
 
