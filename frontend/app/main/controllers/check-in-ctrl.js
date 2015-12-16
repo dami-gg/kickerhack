@@ -18,7 +18,7 @@ angular.module('main')
         var json = '{"uuid": "9f5b5bf9-7e74-44cb-b9d3-f915224a6a44", "table_id": 2, "side": "home", "position": "offense"}';
         $timeout(function () {
           vm.tagData = JSON.parse(json);
-        }, 2000);
+        }, 1000);
       };
 
       this.checkIn = function () {
@@ -28,7 +28,7 @@ angular.module('main')
               $state.go('main.game', {'tableId': vm.tagData.table_id});
             }
             else {
-              // TODO Handle error
+              $log.log("Error during registration at table.");
             }
           });
       };
