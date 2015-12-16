@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.Application.health
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
@@ -13,8 +13,9 @@ GET     /users                      controllers.Application.getUsers
 GET     /users/:userId              controllers.Application.getUser(userId: Long)
 
 # Tables
-GET     /tables                     controllers.Application.getTables
-GET     /tables/:tableId            controllers.Application.getTable(tableId: Long)
+GET     /tables                       controllers.Application.getTables
+GET     /tables/:tableId              controllers.Application.getTable(tableId: Long)
+GET     /tables/:tableId/current-game controllers.Application.getCurrentGame(tableId: Long)
 
 # Games
 GET     /games                      controllers.Application.getGames
@@ -22,5 +23,5 @@ GET     /games/:gameId              controllers.Application.getGame(gameId: Long
 
 # NFC data
 GET     /nfc-data                   controllers.Application.getNfcDatas
-GET     /nfc-data/:uuid             controllers.Application.getNfcData(uuid: java.util.UUID)
+GET     /nfc-data/:uuid             controllers.Application.getNfcData(uuid: String)
 
