@@ -49,7 +49,7 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
         }
       })
       .state('main.game', {
-        url: '/tables/:tableId/game',
+        url: '/tables/:tableId/game/:side',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/game.html',

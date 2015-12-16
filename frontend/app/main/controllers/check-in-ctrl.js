@@ -23,7 +23,7 @@ angular.module('main')
         TablesService.registerPlayerInTable(vm.tagData.table_id, vm.tagData.side, vm.tagData.position)
           .then(function (response) {
             if (response === true) {
-              $state.go('main.game', {'tableId': vm.tagData.table_id});
+              $state.go('main.game', { 'tableId': vm.tagData.table_id, 'side': vm.tagData.side });
             }
             else {
               $log.log("Error during registration at table.");
