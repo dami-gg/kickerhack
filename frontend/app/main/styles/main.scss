@@ -1,7 +1,6 @@
-.card {
-  &.free { background: green; }
-  &.busy { background: red; }
+.right { float: right; }
 
+.card {
   &.game {
     .item { text-align: center; }
     .item-text-wrap { font-weight: bold; font-size: 45px; }
@@ -10,6 +9,13 @@
 
 .btn {
   cursor: pointer;
+}
+
+.circle {
+  border-radius: 50%; width: 20px; height: 20px;
+
+  &.free { background: green; }
+  &.busy { background: red; }
 }
 
 /*

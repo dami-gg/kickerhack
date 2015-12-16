@@ -48,15 +48,6 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
           }
         }
       })
-      .state('main.table', {
-        url: '/tables/:tableId',
-        views: {
-          'pageContent': {
-            templateUrl: 'main/templates/table.html',
-            controller: 'TableController as tableCtrl'
-          }
-        }
-      })
       .state('main.game', {
         url: '/tables/:tableId/game',
         views: {
