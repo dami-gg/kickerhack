@@ -7,9 +7,7 @@ angular.module('main')
 
       var vm = this;
       var baseUrl = Config.ENV.SERVER_URL;
-      var tagDataUrl = baseUrl
-        + '/nfc-data/'
-        + this.tagId;
+      var tagDataUrl = baseUrl + '/nfc-data/' + this.tagId;
 
       this.tagId = $stateParams.tagId;
 

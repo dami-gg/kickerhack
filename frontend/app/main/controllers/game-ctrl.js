@@ -9,17 +9,21 @@ angular.module('main')
       var vm = this;
 
       vm.tableId = $stateParams.tableId;
+      vm.homeTeamPlayers = [];
+      vm.awayTeamPlayers = [];
 
       TablesService.getCurrentGameInTable(this.tableId)
         .then(function (response) {
           if (response !== null) {
             vm.game = response;
+            distributePlayers();
           }
           else {
             // TODO Change when API is ready
             // vm.game = {};
             var parsedJson = JSON.parse(singleGameJson);
             vm.game = parsedJson;
+            distributePlayers(); // TODO Remove when API is working
           }
         });
 
@@ -37,7 +41,7 @@ angular.module('main')
           );
       };
 
-      function updateScore(side) {
+      function updateScore (side) {
         if (side === Config.CONSTS.SIDE_HOME) {
           vm.game.goals_home += 1;
         }
@@ -47,6 +51,17 @@ angular.module('main')
         else {
           // TODO Handle error
         }
-      };
+      }
+
+      function distributePlayers () {
+        vm.game.players.forEach(function (player) {
+          if (player.side === Config.CONSTS.SIDE_HOME) {
+            vm.homeTeamPlayers.push(player.user_id);
+          }
+          else {
+            vm.awayTeamPlayers.push(player.user_id);
+          }
+        });
+      }
     }]);
 
