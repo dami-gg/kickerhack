@@ -6,7 +6,9 @@
     "angular-sanitize": "~1.4.5",
     "angular-ui-router": "~0.2.15",
     "ngCordova": "~0.1.17-alpha",
-    "ng-cordova-oauth": "~0.2.0"
+    "ng-cordova-oauth": "~0.2.0",
+    "angular-logex": "~0.0.10",
+    "angular-local-storage": "~0.2.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.5"

@@ -2,13 +2,16 @@
 angular.module('main')
   .controller('CheckInController', ['Config', '$http', '$timeout', '$stateParams', '$log', 
     function (Config, $http, $timeout, $stateParams, $log) {
+    $log = $log.getInstance('CheckInController');
+    $log.log('Starting');
+
+    this.tagId = $stateParams.tagId;
+
     var self = this;
     var baseUrl = Config.ENV.SERVER_URL;
     var tagDataUrl = baseUrl 
       + '/nfc-data/' 
       + this.tagId;
-
-    this.tagId = $stateParams.tagId;
 
     this.fallbackTagData = function (error) {
       $log.log('fallback');

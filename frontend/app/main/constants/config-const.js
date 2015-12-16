@@ -6,7 +6,7 @@ angular.module('main')
   // https://github.com/mwaylabs/generator-m-ionic#gulp-environment
   ENV: {
     /*inject-env*/
-    'SERVER_URL': 'https://kicker-server.hackweek.zalan.do/'
+    'SERVER_URL': 'https://kicker-server.hackweek.zalan.do'
     /*endinject*/
   },
 
@@ -20,7 +20,7 @@ angular.module('main')
   AUTH: {
     'CLIENT_ID': '8ffed888ba9f8bc1f283',
     'CLIENT_SECRET': 'd880a5aa2bf3edafdfe28d3a1a2959fc5dff2ef4',
-    'CALLBACK_URL': 'https://kicker-server.hackweek.zalan.do/'
+    'CALLBACK_URL': 'https://kicker-server.hackweek.zalan.do'
   }
 
 });
