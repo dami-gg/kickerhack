@@ -32,6 +32,7 @@ class PlayerController @Inject()(playerRepo: PlayerRepository) extends Controlle
   // Players
   //
 
+  /*
   def getPlayers = Action {
     request => {
       val players:Seq[Player] = Await.result(playerRepo.list(), scala.concurrent.duration.Duration.Inf)
@@ -55,4 +56,5 @@ class PlayerController @Inject()(playerRepo: PlayerRepository) extends Controlle
       }
     )
   }
+  */
 }
