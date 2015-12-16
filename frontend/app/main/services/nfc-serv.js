@@ -2,8 +2,20 @@
 angular.module('main')
 .service('NFCService', function ($state, $log) {
   /*global nfc:true*/
-
+  $log = $log.getInstance('NFCService');
+  
   var self = this;
+
+  this.initialize = function() {
+    $log.log('Checking for NFC');
+    if (self.hasNFC()) {
+      self.registerListener();
+    } else {
+      $log.log('No NFC on this device.');
+      var mockEvent = { tag: { ndefMessage: [ { payload: [ 94 ] }] } };
+      //self.onNFCTag(mockEvent);
+    }
+  };
 
   this.hasNFC = function () {
     return (typeof nfc !== 'undefined');

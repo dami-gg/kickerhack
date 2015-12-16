@@ -2,6 +2,9 @@
 angular.module('main')
   .controller('CheckInController', ['Config', '$http', '$timeout', '$stateParams', '$state', '$log', 'TablesService',
     function (Config, $http, $timeout, $stateParams, $state, $log, TablesService) {
+      $log = $log.getInstance('CheckInController');
+      $log.log('Starting');
+
       var vm = this;
       var baseUrl = Config.ENV.SERVER_URL;
       var tagDataUrl = baseUrl
