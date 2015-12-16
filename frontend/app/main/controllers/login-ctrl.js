@@ -1,32 +1,32 @@
 'use strict';
 angular.module('main')
-  .controller('LoginController', ['AuthService', 'LoginService', 'Config', '$ionicHistory', '$http', '$timeout', '$state', '$log', 
+  .controller('LoginController', ['AuthService', 'LoginService', 'Config', '$ionicHistory', '$http', '$timeout', '$state', '$log',
     function (AuthService, LoginService, Config, $ionicHistory, $http, $timeout, $state, $log) {
-    $log = $log.getInstance('LoginController');
-    $log.log('Starting');
+      $log = $log.getInstance('LoginController');
+      $log.log('Starting');
 
-    function initialize () {
-      AuthService.authenticate().then(function () {
+      function initialize () {
+        AuthService.authenticate().then(function () {
 
-        var toState = LoginService.getRedirectState();
+          var toState = LoginService.getRedirectState();
 
-        $ionicHistory.nextViewOptions({
-          disableBack: true
+          $ionicHistory.nextViewOptions({
+            disableBack: true
+          });
+
+          $state.go(toState.name, toState.params);
+
+        }, function () {
+
+          $ionicHistory.nextViewOptions({
+            disableBack: true
+          });
+
+          $state.go('main.home');
+
         });
+      }
 
-        $state.go(toState.name, toState.params);
+      initialize();
 
-      }, function() {
-
-        $ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-
-        $state.go('main.home');
-
-      });
-    };
-
-    initialize();
-
-  }]);
+    }]);

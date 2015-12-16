@@ -1,7 +1,7 @@
 'use strict';
 angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth', 'LocalStorageModule'])
-  .config(['logExProvider', function(logExProvider) {
-      logExProvider.enableLogging(true);
+  .config(['logExProvider', function (logExProvider) {
+    logExProvider.enableLogging(true);
   }])
   .config(function (localStorageServiceProvider) {
     localStorageServiceProvider
@@ -106,7 +106,7 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
   })
   .run(function ($rootScope, $location, $state, $log, AuthService, LoginService) {
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-      
+
       var isLoggedIn = AuthService.isLoggedIn();
 
       if (toState.authenticate && !isLoggedIn) {
@@ -119,12 +119,10 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
   })
   .run(function ($ionicPlatform, $q, $log, NFCService) {
     $log = $log.getInstance('main');
-    
-    $ionicPlatform.ready(function () {
 
+    $ionicPlatform.ready(function () {
       $q.all([NFCService.initialize()]).finally(function () {
-        $log.log("Initialization completed.");
-      })
-      
+        $log.log('Initialization completed.');
+      });
     });
   });

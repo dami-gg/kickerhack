@@ -5,7 +5,7 @@ angular.module('main')
     /**
      * Get all existing users
      * @returns {*}
-       */
+     */
     this.getUsers = function () {
       return $http.get('/users/')
         .then(
@@ -29,7 +29,7 @@ angular.module('main')
      * @param userId
      * @returns {*}
      */
-    this.getUserById = function(userId) {
+    this.getUserById = function (userId) {
       return $http.get('/users/' + userId)
         .then(
           function (response) {

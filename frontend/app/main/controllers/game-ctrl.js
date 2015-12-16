@@ -41,7 +41,7 @@ angular.module('main')
           );
       };
 
-      function updateScore(side) {
+      function updateScore (side) {
         if (side === Config.CONSTS.SIDE_HOME) {
           vm.game.goals_home += 1;
         }
@@ -51,10 +51,10 @@ angular.module('main')
         else {
           // TODO Handle error
         }
-      };
+      }
 
-      function distributePlayers() {
-        vm.game.players.forEach(function(player){
+      function distributePlayers () {
+        vm.game.players.forEach(function (player) {
           if (player.side === Config.CONSTS.SIDE_HOME) {
             vm.homeTeamPlayers.push(player.user_id);
           }
@@ -62,6 +62,6 @@ angular.module('main')
             vm.awayTeamPlayers.push(player.user_id);
           }
         });
-      };
+      }
     }]);
 

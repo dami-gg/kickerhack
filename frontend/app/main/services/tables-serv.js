@@ -186,7 +186,8 @@ angular.module('main')
      */
     vm.registerGoalInTable = function (tableId, side) {
       return $http.post('/tables/' + tableId + '/sides/' + side + '/goal')
-        .then(function (response) {
+        .then(
+          function (response) {
             if (response.status === 201) {
               return true;
             }
@@ -199,7 +200,7 @@ angular.module('main')
             // TODO Handle error
             return false;
           });
-    }
+    };
 
     /**
      * Helper method to sort items
@@ -207,7 +208,7 @@ angular.module('main')
      * @param b
      * @returns {number}
      */
-    function compare(a, b) {
+    function compare (a, b) {
       if (a < b) {
         return -1;
       }
@@ -215,5 +216,5 @@ angular.module('main')
         return 1;
       }
       return 0;
-    };
+    }
   }]);
