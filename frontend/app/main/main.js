@@ -1,5 +1,14 @@
 'use strict';
-angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
+angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth', 'LocalStorageModule'])
+  .config(['logExProvider', function (logExProvider) {
+    logExProvider.enableLogging(true);
+  }])
+  .config(function (localStorageServiceProvider) {
+    localStorageServiceProvider
+      .setPrefix('kickerhack')
+      .setStorageType('sessionStorage')
+      .setNotify(true, true);
+  })
   .config(function ($stateProvider, $urlRouterProvider) {
 
     // ROUTING with ui.router
@@ -49,7 +58,7 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
         }
       })
       .state('main.game', {
-        url: '/game/:gameId',
+        url: '/tables/:tableId/game',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/game.html',
@@ -66,6 +75,15 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
           }
         }
       })
+      .state('main.login', {
+        url: '/login',
+        views: {
+          'pageContent': {
+            templateUrl: 'main/templates/login.html',
+            controller: 'LoginController as loginCtrl'
+          }
+        }
+      })
       .state('main.check-in', {
         url: '/check-in/:tagId',
         views: {
@@ -73,7 +91,8 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
             templateUrl: 'main/templates/check-in.html',
             controller: 'CheckInController as checkInCtrl'
           }
-        }
+        },
+        authenticate: true
       })
       .state('main.debug', {
         url: '/debug',
@@ -85,16 +104,25 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
         }
       });
   })
-  .run(function ($ionicPlatform, $log, NFCService) {
-    $ionicPlatform.ready(function () {
+  .run(function ($rootScope, $location, $state, $log, AuthService, LoginService) {
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
 
-      if (NFCService.hasNFC()) {
-        NFCService.registerListener();
-      } else {
-        $log.log('No NFC on this device.');
-        var mockEvent = { tag: { ndefMessage: [ { payload: [ 94 ] }] } };
-        //NFCService.onNFCTag(mockEvent);
+      var isLoggedIn = AuthService.isLoggedIn();
+
+      if (toState.authenticate && !isLoggedIn) {
+        event.preventDefault();
+        LoginService.setRedirectState(toState.name, toParams);
+        $state.go('main.login');
       }
 
+    });
+  })
+  .run(function ($ionicPlatform, $q, $log, NFCService) {
+    $log = $log.getInstance('main');
+
+    $ionicPlatform.ready(function () {
+      $q.all([NFCService.initialize()]).finally(function () {
+        $log.log('Initialization completed.');
+      });
     });
   });

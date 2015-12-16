@@ -11,7 +11,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # Players
 GET     /users                      controllers.Application.getUsers
 GET     /users/:userId              controllers.Application.getUser(userId: Long)
-POST    /users/                     controllers.Application.addUser
+POST    /users                      controllers.Application.addUser
 
 # Tables
 GET     /tables                       controllers.TableController.getTables

@@ -8,18 +8,22 @@ angular.module('main')
 
       var vm = this;
 
-      vm.gameId = $stateParams.gameId;
+      vm.tableId = $stateParams.tableId;
+      vm.homeTeamPlayers = [];
+      vm.awayTeamPlayers = [];
 
-      GamesService.getGameById(this.gameId)
+      TablesService.getCurrentGameInTable(this.tableId)
         .then(function (response) {
           if (response !== null) {
             vm.game = response;
+            distributePlayers();
           }
           else {
             // TODO Change when API is ready
             // vm.game = {};
             var parsedJson = JSON.parse(singleGameJson);
             vm.game = parsedJson;
+            distributePlayers(); // TODO Remove when API is working
           }
         });
 
@@ -47,6 +51,17 @@ angular.module('main')
         else {
           // TODO Handle error
         }
-      };
+      }
+
+      function distributePlayers () {
+        vm.game.players.forEach(function (player) {
+          if (player.side === Config.CONSTS.SIDE_HOME) {
+            vm.homeTeamPlayers.push(player.user_id);
+          }
+          else {
+            vm.awayTeamPlayers.push(player.user_id);
+          }
+        });
+      }
     }]);
 

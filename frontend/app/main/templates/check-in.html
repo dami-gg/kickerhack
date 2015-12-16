@@ -1,10 +1,10 @@
-<ion-view view-title="Check-In">
+<ion-view id="check-in-view" view-title="Check-In">
   <!-- do you want padding? -->
   <ion-content class="padding">
 
     <div class="row row-center">
       <div class="col text-center">
-        <h3>Checking into game of tag {{ checkInCtrl.tagId | limitTo: 4 }}...</h3>
+        <h3>Checking into game of tag {{ checkInCtrl.tagId | limitTo: 8 }}...</h3>
       </div>
     </div>
 
@@ -15,27 +15,21 @@
     </div>
 
     <div class="row row-center" ng-if="checkInCtrl.tagData">
-      <div class="col-25">
-        Info:
-      </div>
-      <div class="col-25">
-        {{ checkInCtrl.tagData.table_id }}
-      </div>
-      <div class="col-25">
-        {{ checkInCtrl.tagData.side }}
-      </div>
-      <div class="col-25">
-        {{ checkInCtrl.tagData.position }}
-      </div>
-    </div>
-
-    <div class="row row-center" ng-if="checkInCtrl.tagData">
       <div class="col">
-        <button 
-          ng-click="checkInCtrl.checkIn()" 
-          class="button button-block button-positive icon-right ion-chevron-right">
-          Check-In
-        </button>
+        <div class="list card">
+
+          <div class="item item-avatar">
+            <img src="main/assets/images/ball.png" class="ion-ios-football">
+            <h2>Table {{ checkInCtrl.tagData.table_id }}</h2>
+            <p>Playing as {{ checkInCtrl.tagData.side }} on {{ checkInCtrl.tagData.position }}</p>
+          </div>  
+
+          <a class="item item-icon-left assertive" ng-click="checkInCtrl.checkIn()">
+            Check-In
+            <i class="icon ion-chevron-right"></i>
+          </a>
+
+        </div>
       </div>
     </div>
 

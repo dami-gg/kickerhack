@@ -1,6 +1,11 @@
 .card {
   &.free { background: green; }
   &.busy { background: red; }
+
+  &.game {
+    .item { text-align: center; }
+    .item-text-wrap { font-weight: bold; font-size: 45px; }
+  }
 }
 
 .btn {

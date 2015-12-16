@@ -10,6 +10,10 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import model.JsonConversions._
 import repository.UserRepository
+import service.ConfigServiceImpl
+import repository.{PlayerRepository, UserRepository}
+import model.Position._
+import model.Side._
 
 class Application @Inject()(userRepo: UserRepository) extends Controller{
 import scala.concurrent.Await
@@ -59,8 +63,8 @@ import scala.concurrent.Await
   //
   // Games
   //
-  val mockPlayers = List(Player(UserId(1), Attack, Home), Player(UserId(2), Defense, Home),
-    Player(UserId(3), Attack, Away), Player(UserId(4), Defense, Away))
+  val mockPlayers = List(Player(Some(1), 1, 1, Attack, Home), Player(Some(2), 2, 1, Defense, Home),
+    Player(Some(3), 3, 1, Attack, Away), Player(Some(4), 4, 1, Defense, Away))
   val mockGame = Game(Some(GameId(999)), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = Map(999l -> mockGame)
   def getGames = getAll(mockGames, "games")
