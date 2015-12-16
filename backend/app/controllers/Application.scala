@@ -13,9 +13,11 @@ import play.api.libs.ws.{WSResponse, WSAuthScheme, WS}
 import play.api.mvc._
 import model.JsonConversions._
 import service.ConfigServiceImpl
-import repository.UserRepository
+import repository.{KickerTableComponentImpl, UserRepository}
 
-class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl {
+import scala.concurrent.Future
+
+class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl with KickerTableComponentImpl {
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -45,7 +47,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   //
   // Users
   //
-  
+
   def getUsers = Action {
     request => {
       val users:Seq[User] = Await.result(userRepo.list(), scala.concurrent.duration.Duration.Inf)
@@ -74,17 +76,24 @@ import scala.concurrent.ExecutionContext.Implicits.global
   //
   // Tables
   //
-  val mockTable = model.Table(id = Some(TableId(567)), name = "theTable", colorHome = Color("Blue"), building = "BMO", floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
+  val mockTable = model.KickerTable(id = Some(567), name = Some("theTable"), colorHome = Color("Blue"),
+    building = "BMO", floor = "101", lastGoalScored = Some(DateTime.now()), colorAway = Color("Red"))
   val mockTables = Map(567l -> mockTable)
-  def getTables = getAll(mockTables, "tables")
+  def getTables = Action {
+    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
+    Ok(JsObject(Map("tables" -> Json.toJson(result))))
+  }
+
   def getTable(tableId: Long) = getById(tableId, mockTables)
+
+
 
   //
   // Games
   //
-  val mockPlayers = List(Player(UserId(1), Attack, Home), Player(UserId(2), Defense, Home),
-    Player(UserId(3), Attack, Away), Player(UserId(4), Defense, Away))
-  val mockGame = Game(Some(GameId(999)), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
+  val mockPlayers = List(Player(1, Attack, Home), Player(2, Defense, Home),
+    Player(3, Attack, Away), Player(4, Defense, Away))
+  val mockGame = Game(Some(999), 567, mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = Map(999l -> mockGame)
   def getGames = getAll(mockGames, "games")
   def getGame(gameId: Long) = getById(gameId, mockGames)
@@ -93,7 +102,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   //
   // NFC data
   //
-  val mockNfcData = NfcData(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"), TableId(567), Home, Attack)
+  val mockNfcData = NfcData(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"), 567, Home, Attack)
   val mockNfcDatas = Map("de305d54-75b4-431b-adb2-eb6b9e546014" -> mockNfcData)
   def getNfcDatas = getAll(mockNfcDatas, "nfc-data")
   def getNfcData(uuid: String) = getById(uuid, mockNfcDatas)
