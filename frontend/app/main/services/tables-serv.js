@@ -154,8 +154,8 @@ angular.module('main')
      * @param side
      * @param position
      * @returns {*} promise with result:
-     *  - id of the game if the registration was successful
-     *  - null in case of error
+     *  - true if the registration was successful
+     *  - false in case of error
      */
     vm.registerPlayerInTable = function (tableId, side, position) {
       return $http.put('/tables/' + tableId + '/current_game',
@@ -163,16 +163,16 @@ angular.module('main')
         .then(
           function (response) {
             if (response.status === 200 || response.status === 201) {
-              return response.data;
+              return true;
             }
             else {
               // TODO Handle error
-              return null;
+              return false;
             }
           },
           function (error) {
             // TODO Handle error
-            return null;
+            return false;
           });
     };
 

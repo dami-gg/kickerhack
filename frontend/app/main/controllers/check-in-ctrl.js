@@ -20,9 +20,9 @@ angular.module('main')
 
       this.checkIn = function () {
         TablesService.registerPlayerInTable(vm.tagData.table_id, 'home', 'position') // TODO Replace hardcoded values
-          .then(function (gameId) {
-            if (gameId !== null) {
-              $state.go('main.game', {'gameId': gameId});
+          .then(function (response) {
+            if (response === true) {
+              $state.go('main.game', {'tableId': vm.tagData.table_id});
             }
             else {
               // TODO Handle error

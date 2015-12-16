@@ -8,9 +8,9 @@ angular.module('main')
 
       var vm = this;
 
-      vm.gameId = $stateParams.gameId;
+      vm.tableId = $stateParams.tableId;
 
-      GamesService.getGameById(this.gameId)
+      TablesService.getCurrentGameInTable(this.tableId)
         .then(function (response) {
           if (response !== null) {
             vm.game = response;
@@ -37,7 +37,7 @@ angular.module('main')
           );
       };
 
-      function updateScore (side) {
+      function updateScore(side) {
         if (side === Config.CONSTS.SIDE_HOME) {
           vm.game.goals_home += 1;
         }

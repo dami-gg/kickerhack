@@ -49,7 +49,7 @@ angular.module('main', ['ionic', 'ngCordova', 'ui.router', 'ngCordovaOauth'])
         }
       })
       .state('main.game', {
-        url: '/game/:gameId',
+        url: '/tables/:tableId/game',
         views: {
           'pageContent': {
             templateUrl: 'main/templates/game.html',
