@@ -9,7 +9,7 @@ Most of the webapp's functionality can be tested in the browser during developme
 
 Some of the stuff (check-in and OAuth login) are only working when deployed to a mobile device (be sure to enable USB-Debugging on your device).
 
-  gulp --cordova 'run android'
+    gulp --cordova 'run android'
 
 ## Building and Deploying
 
