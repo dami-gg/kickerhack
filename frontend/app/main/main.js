@@ -48,15 +48,6 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
           }
         }
       })
-      .state('main.table', {
-        url: '/tables/:tableId',
-        views: {
-          'pageContent': {
-            templateUrl: 'main/templates/table.html',
-            controller: 'TableController as tableCtrl'
-          }
-        }
-      })
       .state('main.game', {
         url: '/tables/:tableId/game/:side',
         views: {
@@ -93,15 +84,6 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
           }
         },
         authenticate: true
-      })
-      .state('main.debug', {
-        url: '/debug',
-        views: {
-          'pageContent': {
-            templateUrl: 'main/templates/debug.html',
-            controller: 'DebugCtrl as ctrl'
-          }
-        }
       });
   })
   .run(function ($rootScope, $location, $state, $log, AuthService, LoginService) {

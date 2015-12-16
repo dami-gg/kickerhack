@@ -5,7 +5,8 @@ angular.module('main')
 
     var vm = this;
 
-    var allTablesJson = '[{"id":123,"building":"BNB","floor":1,"home":"red","away":"blue","last_goald_scored":"2015-12-14T15:20+01:00"},{"id":124,"building":"BMO","floor":1,"home":"red","away":"blue","last_goald_scored":"2015-12-14T15:20+01:00"},{"id":456,"building":"BMO","floor":2,"home":"red","away":"blue","last_goald_scored":"2015-12-14T15:20+01:00"}]';
+    var allTablesJson = '[{"id":123,"building":"BNB","floor":1,"home":"red","away":"blue","last_goal_scored":"2015-12-14T15:20+01:00"},{"id":124,"building":"BMO","floor":1,"home":"red","away":"blue","last_goal_scored":"2015-12-14T15:20+01:00"},{"id":1,"building":"BMO","floor":2,"home":"red","away":"blue","last_goal_scored":"2015-12-14T15:20+01:00"}]';
+    var singleGameJson = '{"game_id":1,"table_id":1,"goals_home":0,"goals_away":0,"started":"2015-12-14T15:20+01:00","last_goal_scored":"2015-12-14T15:20+03:00","players":[{"user_id":1,"position":"attack","side":"home"},{"user_id":2,"position":"defense","side":"home"},{"user_id":3,"position":"attack","side":"away"},{"user_id":4,"position":"defense","side":"away"}]}';
 
     /**
      * Get all existing tables
@@ -144,6 +145,12 @@ angular.module('main')
           },
           function (error) {
             // TODO Handle error
+            // return null;
+            // TODO Change when API is ready
+            if (tableId === 1) {
+              var parsedJson = JSON.parse(singleGameJson);
+              return parsedJson;
+            }
             return null;
           });
     };
@@ -208,7 +215,7 @@ angular.module('main')
      * @param b
      * @returns {number}
      */
-    function compare (a, b) {
+    function compare(a, b) {
       if (a < b) {
         return -1;
       }

@@ -23,8 +23,8 @@
       </div>
     </div>
 
-    <div class="text-center">
-      <button class="button button-positive" ng-click="scoreGoal()">I have scored</button>
+    <div class="text-center" ng-if="gameCtrl.loggedInUser">
+      <button class="button button-positive" ng-click="gameCtrl.scoreGoal()">I have scored</button>
     </div>
 
   </ion-content>

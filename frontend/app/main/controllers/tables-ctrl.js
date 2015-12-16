@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('main')
-  .controller('TablesController', ['$stateParams', 'TablesService',
-    function ($stateParams, TablesService) {
+  .controller('TablesController', ['$stateParams', '$state', 'TablesService',
+    function ($stateParams, $state, TablesService) {
 
       var vm = this;
 
@@ -19,12 +19,21 @@ angular.module('main')
           vm.updateTablesStatus(vm.tablesByFloor);
         });
 
-      vm.updateTablesStatus = function (tables) {
-        tables.forEach(function (table) {
-          TablesService.getCurrentGameInTable(table.id)
-            .then(function (response) {
-              table.available = response !== null;
-            });
+      vm.updateTablesStatus = function (tablesByFloor) {
+        tablesByFloor.forEach(function (floorTables) {
+          floorTables.tables.forEach(function (table) {
+            TablesService.getCurrentGameInTable(table.id)
+              .then(function (response) {
+                table.available = response === null;
+                if (response !== null) {
+                  table.game_id = response.game_id;
+                }
+              });
+          });
         });
+      };
+
+      vm.showTableGame = function (table) {
+        $state.go('main.game', { 'tableId': table.id });
       };
     }]);
