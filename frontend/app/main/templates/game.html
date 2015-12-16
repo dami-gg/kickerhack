@@ -3,17 +3,17 @@
 
     <div class="list card">
       <div>
-        <p>{{gameCtrl.game.players[0].user_id}} && {{gameCtrl.game.players[1].user_id}}</p>
+        <p>Team players: {{gameCtrl.game.players[0].user_id}} && {{gameCtrl.game.players[1].user_id}}</p>
         <p>{{gameCtrl.game.goals_home}}</p>
       </div>
 
       <div>
-        <p>{{gameCtrl.game.players[2].user_id}} && {{gameCtrl.game.players[3].user_id}}</p>
+        <p>Team players: {{gameCtrl.game.players[2].user_id}} && {{gameCtrl.game.players[3].user_id}}</p>
         <p>{{gameCtrl.game.goals_away}}</p>
       </div>
     </div>
 
-    <button ng-click="scoreGoal()">I have scored</button>
+    <button class="button button-positive" ng-click="scoreGoal('home')">I have scored</button>
 
   </ion-content>
 </ion-view>
