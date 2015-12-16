@@ -24,7 +24,7 @@ case object Home extends Side
 case object Away extends Side
 
 case class Player(user: UserId, position: Position, side: Side)
-case class Game(id: GameId, table: Table, players: List[Player], goalsHome: Int, goalsAway: Int,
+case class Game(id: GameId, tableId: TableId, players: List[Player], goalsHome: Int, goalsAway: Int,
                 start: DateTime, end: DateTime)
 
 case class NfcData(uuid: UUID, tableId: TableId, side: Side, position: Position)

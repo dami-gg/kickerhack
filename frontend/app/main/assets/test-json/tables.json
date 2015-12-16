@@ -1,0 +1,26 @@
+[
+  {
+    "id":123,
+    "building":"BNB",
+    "floor":1,
+    "home":"red",
+    "away":"blue",
+    "last_goald_scored":"2015-12-14T15:20+01:00"
+  },
+  {
+    "id":124,
+    "building":"BMO",
+    "floor":1,
+    "home":"red",
+    "away":"blue",
+    "last_goald_scored":"2015-12-14T15:20+01:00"
+  },
+  {
+    "id":456,
+    "building":"BMO",
+    "floor":2,
+    "home":"red",
+    "away":"blue",
+    "last_goald_scored":"2015-12-14T15:20+01:00"
+  }
+]

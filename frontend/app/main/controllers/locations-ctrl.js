@@ -1,7 +1,18 @@
 'use strict';
 
 angular.module('main')
-  .controller('LocationsController', ['TablesService', function (TablesService) {
+  .controller('LocationsController', ['TablesService',
+    function (TablesService) {
 
-    this.locations = TablesService.getLocations();
-  }]);
+      var vm = this;
+
+      TablesService.getLocations()
+        .then(function (response) {
+          if (response !== null) {
+            vm.locations = response;
+          }
+          else {
+            vm.locations = [];
+          }
+        });
+    }]);
