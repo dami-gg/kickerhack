@@ -45,5 +45,6 @@
     <plugin name="cordova-plugin-network-information" spec="~1.1.0" />
     <plugin name="cordova-plugin-splashscreen" spec="~3.0.0" />
     <plugin name="cordova-plugin-statusbar" spec="~2.0.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.1.0" />
     <plugin name="phonegap-nfc" spec="~0.6.6" />
 </widget>
