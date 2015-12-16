@@ -9,6 +9,8 @@ angular.module('main')
       var vm = this;
 
       vm.tableId = $stateParams.tableId;
+      vm.side = $stateParams.side;
+
       vm.homeTeamPlayers = [];
       vm.awayTeamPlayers = [];
 
@@ -27,12 +29,12 @@ angular.module('main')
           }
         });
 
-      vm.scoreGoal = function (side) {
-        TablesService.registerGoalInTable(vm.game.table_id, side)
+      vm.scoreGoal = function () {
+        TablesService.registerGoalInTable(vm.game.table_id, vm.side)
           .then(
             function (response) {
               if (response === true) {
-                updateScore(side);
+                updateScore(vm.side);
               }
               else {
                 // TODO Handle error
