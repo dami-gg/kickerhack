@@ -4,41 +4,19 @@ import java.util.UUID
 import javax.inject.Inject
 
 import model._
-import play.api.Play.current
 import org.joda.time.DateTime
 import play.api.libs.json.{Writes, JsObject, Json}
 import play.api.libs.json.Json
-import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.libs.ws.{WSResponse, WSAuthScheme, WS}
 import play.api.mvc._
 import model.JsonConversions._
+import repository.{KickerTableComponentImpl, UserRepository, PlayerRepository}
 import service.ConfigServiceImpl
-import repository.{KickerTableComponentImpl, UserRepository}
-
-import scala.concurrent.Future
+import model.Position._
+import model.Side._
 
 class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl with KickerTableComponentImpl {
 import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
 
-  def auth(request: Request[AnyContent])(callback: User => Result) = {
-    val authToken = request.headers.get("access_token").get
-    WS.url(s"https://api.github.com/applications/$clientId/tokens/$authToken")
-      .withAuth(clientId, clientSecret, WSAuthScheme.BASIC)
-      .get()
-      .map { response: WSResponse =>
-        val json = response.json
-        val userId = (json \ "user" \ "id").as[Long]
-        val userName = (json \ "user" \ "login").as[String]
-        callback(User(Some(userId), userName))
-      }
-  }
-
-  def testOAuth = Action.async { request =>
-    auth(request) { user =>
-      Ok(Json.toJson(List(user)))
-    }
-  }
 
   def health = Action {
     Ok("Alright then.")
@@ -72,27 +50,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
     )
   }
 
-
-  //
-  // Tables
-  //
-  val mockTable = model.KickerTable(id = Some(567), name = Some("theTable"), colorHome = Color("Blue"),
-    building = "BMO", floor = "101", lastGoalScored = Some(DateTime.now()), colorAway = Color("Red"))
-  val mockTables = Map(567l -> mockTable)
-  def getTables = Action {
-    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
-    Ok(JsObject(Map("tables" -> Json.toJson(result))))
-  }
-
-  def getTable(tableId: Long) = getById(tableId, mockTables)
-
-
-
   //
   // Games
   //
-  val mockPlayers = List(Player(1, Attack, Home), Player(2, Defense, Home),
-    Player(3, Attack, Away), Player(4, Defense, Away))
+  val mockPlayers = List(Player(Some(1), 1, 1, Attack, Home), Player(Some(2), 2, 1, Defense, Home),
+    Player(Some(3), 3, 1, Attack, Away), Player(Some(4), 4, 1, Defense, Away))
   val mockGame = Game(Some(999), 567, mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = Map(999l -> mockGame)
   def getGames = getAll(mockGames, "games")
