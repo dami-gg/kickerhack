@@ -34,11 +34,8 @@ class Application @Inject()(userRepo: UserRepository) extends Controller {
   }
 
   def getUser(userId: Long) = Action {
-    userRepo.findById(userId).onSuccess {
-      case s => Ok(Json.toJson(s))
-    }
-    
-    NotFound
+    val user:User = Await.result(userRepo.findById(userId), scala.concurrent.duration.Duration.Inf)
+    Ok(Json.toJson(user))
   }
 
   def addUser = Action(parse.json) { request =>
