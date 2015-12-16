@@ -1,4 +1,4 @@
-<ion-view view-title="Check-In">
+<ion-view id="check-in-view" view-title="Check-In">
   <!-- do you want padding? -->
   <ion-content class="padding">
 
@@ -31,8 +31,8 @@
 
     <div class="row row-center" ng-if="checkInCtrl.tagData">
       <div class="col">
-        <button 
-          ng-click="checkInCtrl.checkIn()" 
+        <button
+          ng-click="checkInCtrl.checkIn()"
           class="button button-block button-positive icon-right ion-chevron-right">
           Check-In
         </button>
