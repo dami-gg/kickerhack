@@ -4,39 +4,16 @@ import java.util.UUID
 import javax.inject.Inject
 
 import model._
-import play.api.Play.current
 import org.joda.time.DateTime
 import play.api.libs.json.{Writes, JsObject, Json}
 import play.api.libs.json.Json
-import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.libs.ws.{WSResponse, WSAuthScheme, WS}
 import play.api.mvc._
 import model.JsonConversions._
-import service.ConfigServiceImpl
 import repository.UserRepository
 
-class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl {
+class Application @Inject()(userRepo: UserRepository) extends Controller{
 import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
 
-  def auth(request: Request[AnyContent])(callback: User => Result) = {
-    val authToken = request.headers.get("access_token").get
-    WS.url(s"https://api.github.com/applications/$clientId/tokens/$authToken")
-      .withAuth(clientId, clientSecret, WSAuthScheme.BASIC)
-      .get()
-      .map { response: WSResponse =>
-        val json = response.json
-        val userId = (json \ "user" \ "id").as[Long]
-        val userName = (json \ "user" \ "login").as[String]
-        callback(User(Some(userId), userName))
-      }
-  }
-
-  def testOAuth = Action.async { request =>
-    auth(request) { user =>
-      Ok(Json.toJson(List(user)))
-    }
-  }
 
   def health = Action {
     Ok("Alright then.")
@@ -45,7 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   //
   // Users
   //
-  
+
   def getUsers = Action {
     request => {
       val users:Seq[User] = Await.result(userRepo.list(), scala.concurrent.duration.Duration.Inf)

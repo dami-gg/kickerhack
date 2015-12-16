@@ -14,9 +14,10 @@ GET     /users/:userId              controllers.Application.getUser(userId: Long
 POST    /users/                     controllers.Application.addUser
 
 # Tables
-GET     /tables                       controllers.Application.getTables
-GET     /tables/:tableId              controllers.Application.getTable(tableId: Long)
-GET     /tables/:tableId/current-game controllers.Application.getCurrentGame(tableId: Long)
+GET     /tables                       controllers.TableController.getTables
+GET     /tables/:tableId              controllers.TableController.getTable(tableId: Long)
+GET     /tables/:tableId/current-game controllers.TableController.getCurrentGame(tableId: Long)
+PUT     /tables/:tableId/current-game controllers.TableController.registerPlayer(tableId: Long)
 
 # Games
 GET     /games                      controllers.Application.getGames
@@ -26,4 +27,3 @@ GET     /games/:gameId              controllers.Application.getGame(gameId: Long
 GET     /nfc-data                   controllers.Application.getNfcDatas
 GET     /nfc-data/:uuid             controllers.Application.getNfcData(uuid: String)
 
-GET     /testOAuth                  controllers.Application.testOAuth
