@@ -3,13 +3,36 @@ package controllers
 import java.util.UUID
 
 import model._
+import play.api.Play.current
 import org.joda.time.DateTime
-import play.api._
 import play.api.libs.json.{Writes, JsObject, Json}
+import play.api.libs.json.Json
+import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.ws.{WSResponse, WSAuthScheme, WS}
 import play.api.mvc._
 import model.JsonConversions._
+import service.ConfigServiceImpl
 
-class Application extends Controller {
+class Application extends Controller with ConfigServiceImpl {
+
+  def auth(request: Request[AnyContent])(callback: User => Result) = {
+    val authToken = request.headers.get("access_token").get
+    WS.url(s"https://api.github.com/applications/$clientId/tokens/$authToken")
+      .withAuth(clientId, clientSecret, WSAuthScheme.BASIC)
+      .get()
+      .map { response: WSResponse =>
+        val json = response.json
+        val userId = (json \ "user" \ "id").as[Int]
+        val userName = (json \ "user" \ "login").as[String]
+        callback(User(UserId(userId), userName))
+      }
+  }
+
+  def testOAuth = Action.async { request =>
+    auth(request) { user =>
+      Ok(Json.toJson(List(user)))
+    }
+  }
 
   def health = Action {
     Ok("Alright then.")
@@ -18,9 +41,12 @@ class Application extends Controller {
   //
   // Users
   //
+
   val mockUsers = Map(1l-> User(UserId(1), "Daniel"), 2l -> User(UserId(2), "Paul"), 3l -> User(UserId(3), "Salomé"), 4l -> User(UserId(4), "Roman"))
   def getUsers = getAll(mockUsers, "users")
   def getUser(userId: Long) = getById(userId, mockUsers)
+
+
 
   //
   // Tables

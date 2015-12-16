@@ -25,3 +25,4 @@ GET     /games/:gameId              controllers.Application.getGame(gameId: Long
 GET     /nfc-data                   controllers.Application.getNfcDatas
 GET     /nfc-data/:uuid             controllers.Application.getNfcData(uuid: String)
 
+GET     /testOAuth                  controllers.Application.testOAuth

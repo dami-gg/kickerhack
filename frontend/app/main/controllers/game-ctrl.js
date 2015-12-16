@@ -12,18 +12,18 @@ angular.module('main')
 
       GamesService.getGameById(this.gameId)
         .then(function (response) {
-          if (response === null) {
+          if (response !== null) {
+            vm.game = response;
+          }
+          else {
             // TODO Change when API is ready
             // vm.game = {};
             var parsedJson = JSON.parse(singleGameJson);
             vm.game = parsedJson;
           }
-          else {
-            vm.game = response.data;
-          }
         });
 
-      this.scoreGoal = function () {
+      vm.scoreGoal = function () {
 
       };
     }]);
