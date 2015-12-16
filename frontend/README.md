@@ -3,6 +3,11 @@ This project was generated with Generator-M-Ionic v1.4.1. For more info visit th
 
 ## Development
 
+First install `NodeJS`. Then prepare your environment.
+
+    npm install bower
+    bower install
+
 Most of the webapp's functionality can be tested in the browser during development.
     
     gulp watch
