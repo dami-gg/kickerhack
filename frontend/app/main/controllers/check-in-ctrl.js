@@ -22,7 +22,7 @@ angular.module('main')
       };
 
       this.checkIn = function () {
-        TablesService.registerPlayerInTable(vm.tagData.table_id, 'home', 'position') // TODO Replace hardcoded values
+        TablesService.registerPlayerInTable(vm.tagData.table_id, vm.tagData.side, vm.tagData.position) // TODO Replace hardcoded values
           .then(function (response) {
             if (response === true) {
               $state.go('main.game', {'tableId': vm.tagData.table_id});

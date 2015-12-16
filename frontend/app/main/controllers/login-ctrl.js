@@ -1,7 +1,7 @@
 'use strict';
 angular.module('main')
-  .controller('LoginController', ['AuthService', 'LoginService', 'Config', '$http', '$timeout', '$state', '$log', 
-    function (AuthService, LoginService, Config, $http, $timeout, $state, $log) {
+  .controller('LoginController', ['AuthService', 'LoginService', 'Config', '$ionicHistory', '$http', '$timeout', '$state', '$log', 
+    function (AuthService, LoginService, Config, $ionicHistory, $http, $timeout, $state, $log) {
     $log = $log.getInstance('LoginController');
     $log.log('Starting');
 
@@ -9,12 +9,21 @@ angular.module('main')
       AuthService.authenticate().then(function () {
 
         var toState = LoginService.getRedirectState();
+
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
+
         $state.go(toState.name, toState.params);
 
       }, function() {
 
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
+
         $state.go('main.home');
-        
+
       });
     };
 
