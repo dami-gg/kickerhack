@@ -13,7 +13,7 @@
               <div class="row responsive-md" ng-if="$even">
                 <div class="col" ng-init="tableAA = floorA.tables[$index]">
                   <div class="card btn" ui-sref="main.table({table: tableAA.id})"
-                       ng-class="tableAA.current_game === null ? 'free' : 'busy'">
+                       ng-class="tableAA.available ? 'free' : 'busy'">
                     <h2>Table {{tableAA.id}}</h2>
                     <span>Some text AA</span>
                   </div>
@@ -21,7 +21,7 @@
 
                 <div class="col" ng-init="tableAB = floorA.tables[$index+1]">
                   <div class="card btn" ui-sref="main.table({table: tableAB.id})"
-                       ng-class="tableAB.current_game === null ? 'free' : 'busy'"
+                       ng-class="tableAB.available ? 'free' : 'busy'"
                        ng-if="$index+1 < floorA.tables.length">
                     <h2>Table {{tableAB.id}}</h2>
                     <span>Some text AB</span>
@@ -42,7 +42,7 @@
               <div class="row responsive-md" ng-if="$even">
                 <div class="col" ng-init="tableBA = floorB.tables[$index]">
                   <div class="card btn" ui-sref="main.table({table: tableBA.id})"
-                       ng-class="tableBA.current_game === null ? 'free' : 'busy'">
+                       ng-class="tableBA.available ? 'free' : 'busy'">
                     <h2>Table {{tableBA.id}}</h2>
                     <span>Some text BA</span>
                   </div>
@@ -50,7 +50,7 @@
 
                 <div class="col" ng-init="tableBB = floorB.tables[$index+1]">
                   <div class="card btn" ui-sref="main.table({table: tableBB.id})"
-                       ng-class="tableBB.current_game === null ? 'free' : 'busy'"
+                       ng-class="tableBB.available ? 'free' : 'busy'"
                        ng-if="$index+1 < floorB.tables.length">
                     <h2>Table {{tableBB.id}}</h2>
                     <span>Some text BB</span>
