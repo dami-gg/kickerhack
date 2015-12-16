@@ -1,35 +1,55 @@
 package controllers
 
 import java.util.UUID
+import javax.inject.Inject
 
 import model._
 import org.joda.time.DateTime
-import play.api._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import model.JsonConversions._
+import repository.UserRepository
 
-class Application extends Controller {
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+
+class Application @Inject()(userRepo: UserRepository) extends Controller {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  val mockUsers = Map(1l-> User(Some(UserId(1)), "Daniel"), 2l -> User(Some(UserId(2)), "Paul"), 3l -> User(Some(UserId(3)), "Salomé"), 4l -> User(Some(UserId(4)), "Roman"))
   val mockTable = model.Table(id = Some(TableId(567)), name = "theTable", colorHome = Color("Blue"), building = "BMO", floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
   val mockTables = Map(567l -> mockTable)
 
   //
   // Users
   //
-  def getUsers = Action(Ok(JsObject(Map("users" -> Json.toJson(mockUsers.values.toList)))))
+  def getUsers = Action {
+    request => {
+      val users:Seq[User] = Await.result(userRepo.list(), scala.concurrent.duration.Duration.Inf)
+
+      Ok(JsObject(Map("users" -> Json.toJson(users))))
+    }
+  }
 
   def getUser(userId: Long) = Action {
-    if (mockUsers contains userId) {
-      Ok(Json.toJson(mockUsers(userId)))
-    } else {
-      NotFound
+    userRepo.findById(userId).onSuccess {
+      case s => Ok(Json.toJson(s))
     }
+    
+    NotFound
+  }
+
+  def addUser = Action(parse.json) { request =>
+    val user = request.body.validate[User]
+    user.fold(
+      errors => BadRequest,
+      user => {
+        userRepo.insert(User(null, user.name))
+        Created
+      }
+    )
   }
 
   //

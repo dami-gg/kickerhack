@@ -12,7 +12,7 @@ case class TableId(override val value: Long) extends ID(value)
 case class GameId(override val value: Long) extends ID(value)
 
 
-case class User(id: Option[UserId], name: String)
+case class User(id: Option[Long], name: String)
 case class Color(color: String)
 case class Table(id: Option[TableId], name: String, building: String, floor: String, colorHome: Color, colorAway: Color, lastGoalScored: DateTime)
 
@@ -33,6 +33,7 @@ case class NfcData(uuid: UUID, tableId: TableId, side: Side, position: Position)
 object JsonConversions {
   implicit val idWrites = new Writes[ID] { override def writes(o: ID): JsValue = JsNumber(o.value) }
   implicit val userWrites = Json.writes[User]
+  implicit val userFormat = Json.format[User]
   implicit val colorWrites = new Writes[Color] { override def writes(o: Color): JsValue = JsString(o.color) }
   implicit val tableWrites = Json.writes[Table]
 

@@ -1,17 +1,13 @@
 package repository
 
-import model.{UserId, User}
+import model.{User}
 import play.api.db.DB
-
 import slick.driver.PostgresDriver.api._
-import slick.lifted.Tag
-
 import play.api.Play.current
-
 import scala.concurrent.Future
 
 class Users(tag: Tag) extends Table[User](tag, Some("kicker"), "user") {
-  def id = column[UserId]("user_id")
+  def id = column[Long]("user_id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
 
   override def * = (id.?, name) <> ((User.apply _).tupled, User.unapply)
@@ -31,6 +27,14 @@ class UserRepository {
       db.run(users.result)
     } finally { db.close() }
   }
+
+  def findById(id: Long): Future[User] = {
+    try db.run(filterQuery(id).result.head)
+    finally db.close
+  }
+
+  private def filterQuery(id: Long): Query[Users, User, Seq] =
+    users.filter(_.id === id)
 }
 
 
