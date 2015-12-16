@@ -1,19 +1,31 @@
-<ion-view view-title="Game {{gameCtrl.game.game_id}} @ {{gameCtrl.game.table_id}}">
+<ion-view view-title="Game at table {{gameCtrl.game.table_id}}">
   <ion-content class="padding">
 
-    <div class="list card">
-      <div>
-        <p>{{gameCtrl.game.players[0].user_id}} && {{gameCtrl.game.players[1].user_id}}</p>
-        <p>{{gameCtrl.game.goals_home}}</p>
-      </div>
+    <div class="list card game">
+      <div class="row responsive-md">
+        <div class="col">
+          <div class="item item-divider">
+            Team players: {{gameCtrl.homeTeamPlayers[0]}} & {{gameCtrl.homeTeamPlayers[1]}}
+          </div>
+          <div class="item item-text-wrap">
+            {{gameCtrl.game.goals_home}}
+          </div>
+        </div>
 
-      <div>
-        <p>{{gameCtrl.game.players[2].user_id}} && {{gameCtrl.game.players[3].user_id}}</p>
-        <p>{{gameCtrl.game.goals_away}}</p>
+        <div class="col">
+          <div class="item item-divider">
+            Team players: {{gameCtrl.awayTeamPlayers[0]}} & {{gameCtrl.awayTeamPlayers[1]}}
+          </div>
+          <div class="item item-text-wrap">
+            {{gameCtrl.game.goals_away}}
+          </div>
+        </div>
       </div>
     </div>
 
-    <button ng-click="scoreGoal()">I have scored</button>
+    <div class="text-center">
+      <button class="button button-positive" ng-click="scoreGoal('home')">I have scored</button>
+    </div>
 
   </ion-content>
 </ion-view>

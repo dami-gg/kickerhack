@@ -21,9 +21,9 @@ angular.module('main')
 
       vm.updateTablesStatus = function (tables) {
         tables.forEach(function (table) {
-          TablesService.isTableFree(table.id)
+          TablesService.getCurrentGameInTable(table.id)
             .then(function (response) {
-              table.available = response;
+              table.available = response !== null;
             });
         });
       };

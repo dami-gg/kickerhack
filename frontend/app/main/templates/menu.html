@@ -32,20 +32,17 @@
     <!-- menu content -->
     <ion-content>
       <ion-list>
-        <ion-item class="btn" menu-close ui-sref="main.locations">
-          Tables
-        </ion-item>
-        <ion-item class="btn" menu-close ui-sref="main.game">
-          Game
-        </ion-item>
-        <ion-item class="btn" menu-close ui-sref="main.ranking">
-          Ranking
-        </ion-item>
         <ng-switch on="isIt">
           <ion-item ng-switch-when="true" menu-close ui-sref="main.check-in">
             Check-In
           </ion-item>
         </ng-switch>
+        <ion-item class="btn" menu-close ui-sref="main.locations">
+          Tables
+        </ion-item>
+        <ion-item class="btn" menu-close ui-sref="main.ranking">
+          Ranking
+        </ion-item>
         <ion-item class="btn" menu-close ui-sref="main.debug">
           Debug
         </ion-item>
