@@ -9,13 +9,12 @@ import play.api.libs.json.{Writes, JsObject, Json}
 import play.api.libs.json.Json
 import play.api.mvc._
 import model.JsonConversions._
-import repository.UserRepository
+import repository.{KickerTableComponentImpl, UserRepository, PlayerRepository}
 import service.ConfigServiceImpl
-import repository.{PlayerRepository, UserRepository}
 import model.Position._
 import model.Side._
 
-class Application @Inject()(userRepo: UserRepository) extends Controller{
+class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl with KickerTableComponentImpl {
 import scala.concurrent.Await
 
 
@@ -51,21 +50,12 @@ import scala.concurrent.Await
     )
   }
 
-
-  //
-  // Tables
-  //
-  val mockTable = model.Table(id = Some(TableId(567)), name = "theTable", colorHome = Color("Blue"), building = "BMO", floor = "101", lastGoalScored = DateTime.now(), colorAway = Color("Red"))
-  val mockTables = Map(567l -> mockTable)
-  def getTables = getAll(mockTables, "tables")
-  def getTable(tableId: Long) = getById(tableId, mockTables)
-
   //
   // Games
   //
   val mockPlayers = List(Player(Some(1), 1, 1, Attack, Home), Player(Some(2), 2, 1, Defense, Home),
     Player(Some(3), 3, 1, Attack, Away), Player(Some(4), 4, 1, Defense, Away))
-  val mockGame = Game(Some(GameId(999)), TableId(567), mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
+  val mockGame = Game(Some(999), 567, mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
   val mockGames = Map(999l -> mockGame)
   def getGames = getAll(mockGames, "games")
   def getGame(gameId: Long) = getById(gameId, mockGames)
@@ -74,7 +64,7 @@ import scala.concurrent.Await
   //
   // NFC data
   //
-  val mockNfcData = NfcData(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"), TableId(567), Home, Attack)
+  val mockNfcData = NfcData(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"), 567, Home, Attack)
   val mockNfcDatas = Map("de305d54-75b4-431b-adb2-eb6b9e546014" -> mockNfcData)
   def getNfcDatas = getAll(mockNfcDatas, "nfc-data")
   def getNfcData(uuid: String) = getById(uuid, mockNfcDatas)

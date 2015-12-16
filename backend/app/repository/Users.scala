@@ -7,8 +7,8 @@ import play.api.Play.current
 import scala.concurrent.Future
 
 class Users(tag: Tag) extends Table[User](tag, Some("kicker"), "user") {
-  def id = column[Long]("user_id", O.PrimaryKey, O.AutoInc)
-  def name = column[String]("name")
+  def id = column[Long]("u_id", O.PrimaryKey, O.AutoInc)
+  def name = column[String]("u_name")
 
   override def * = (id.?, name) <> ((User.apply _).tupled, User.unapply)
 }
