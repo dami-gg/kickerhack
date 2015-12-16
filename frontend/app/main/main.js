@@ -93,15 +93,6 @@ angular.module('main', ['log.ex.uo', 'ionic', 'ngCordova', 'ui.router', 'ngCordo
           }
         },
         authenticate: true
-      })
-      .state('main.debug', {
-        url: '/debug',
-        views: {
-          'pageContent': {
-            templateUrl: 'main/templates/debug.html',
-            controller: 'DebugCtrl as ctrl'
-          }
-        }
       });
   })
   .run(function ($rootScope, $location, $state, $log, AuthService, LoginService) {
