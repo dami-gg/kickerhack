@@ -23,7 +23,7 @@ class Application extends Controller {
   // Users
   //
   def getUsers = Action {
-    request => Ok("A list of players: " + Json.toJson(mockUsers))
+    request => Ok(Json.toJson(mockUsers))
   }
 
   def getUser(playerId: String) = Action(NotFound)
