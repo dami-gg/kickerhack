@@ -16,5 +16,15 @@ angular.module('main')
           else {
             vm.tablesByFloor = [];
           }
+          vm.updateTablesStatus(vm.tablesByFloor);
         });
+
+      vm.updateTablesStatus = function (tables) {
+        tables.forEach(function (table) {
+          TablesService.isTableFree(table.id)
+            .then(function (response) {
+              table.available = response;
+            });
+        });
+      };
     }]);

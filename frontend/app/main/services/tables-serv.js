@@ -102,6 +102,27 @@ angular.module('main')
         );
     };
 
+    vm.isTableFree = function(tableId) {
+      return $http.get('/tables/' + tableId + '/current_game')
+        .then(
+          function (response) {
+            if (response.status === 200) {
+              return false;
+            }
+            else if (response.status === 404) {
+              return true;
+            }
+            else {
+              // TODO Handle unexpected response type
+              return false;
+            }
+          },
+          function (error) {
+            // TODO Handle error
+            return false;
+          });
+    };
+
     function compare (a, b) {
       if (a < b) {
         return -1;
