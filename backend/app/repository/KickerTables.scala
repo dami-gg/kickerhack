@@ -1,15 +1,16 @@
 package repository
 
-import model._
+import model.{Color, KickerTable, User}
 import org.joda.time.DateTime
-import play.api.Play.current
+import slick.dbio.Effect.Read
+import slick.lifted.Tag
 import play.api.db.DB
 import slick.driver.PostgresDriver.api._
-
+import play.api.Play.current
+import slick.profile.FixedSqlStreamingAction
 import scala.concurrent.Future
 
 class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "kickerTable") {
-
   implicit val colorColumnType = MappedColumnType.base[Color, String](
     { c => c match { case Color(s) => s}},
     { s => Color(s) }
@@ -33,21 +34,20 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
 }
 
 class KickerTableRepository {
-  private val kickerTables = TableQuery[KickerTables]
+    private val kickerTables = TableQuery[KickerTables]
 
-  private def db: Database = Database.forDataSource(DB.getDataSource())
+    private def db = Database.forDataSource(DB.getDataSource())
 
-  def insert(kickerTable: KickerTable): Future[Int] =
-    try db.run(kickerTables += kickerTable)
-    finally db.close
-
-  def list(): Future[Seq[KickerTable]] = {
-    try {
-      db.run(kickerTables.result)
-    } finally {
-      db.close()
+    def createKickerTable(kickerTable: KickerTable): Future[Long] = {
+      val insertAction = (kickerTables returning kickerTables.map(_.id)) += kickerTable
+      try db.run(insertAction)
+      finally db.close
     }
-  }
+
+    def getAll(): Future[Seq[KickerTable]] = {
+      try db.run(kickerTables.result)
+      finally db.close
+    }
 
   def findById(id: Long): Future[KickerTable] = {
     try db.run(filterQuery(id).result.head)

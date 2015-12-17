@@ -2,6 +2,11 @@ package controllers
 
 import javax.inject.Inject
 
+import model.{Color, KickerTable}
+import play.api.libs.json.{Json, JsObject}
+import play.api.mvc.{Action, Controller}
+import repository.{KickerTableRepository, UserRepository}
+import service.AuthService
 import model.JsonConversions._
 import model.Side.Side
 import model.{Game, Color, KickerTable, Side}
@@ -15,11 +20,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TableController @Inject()(authService: AuthServiceImpl, kickerTables: KickerTableRepository, gamesRepository: GamesRepository) extends Controller {
+class TableController @Inject()(authService: AuthServiceImpl, kickerTableRepository: KickerTableRepository) extends Controller  {
 
-  def getTables = Action.async {
-    kickerTables.list().map {
-      tables => Ok(Json.toJson(tables))
-    }
+  def getTables = Action {
+    kickerTableRepository.createKickerTable(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
+    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
+    Ok(Json.toJson(result))
   }
 
   def getTable(tableId: Long) = Action.async {
