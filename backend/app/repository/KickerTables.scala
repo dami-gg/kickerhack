@@ -33,7 +33,6 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     ((KickerTable.apply _).tupled, KickerTable.unapply)
 }
 
-
 class KickerTableRepository {
     private val kickerTables = TableQuery[KickerTables]
 
@@ -50,15 +49,14 @@ class KickerTableRepository {
       finally db.close
     }
 
-    def findById(id: Long): Future[Option[KickerTable]] = {
-      try {
-        val query = kickerTables.filter(_.id === id)
-        db.run(query.result.headOption)
-      }
-      finally db.close
-    }
-
-
-
-
+  def findById(id: Long): Future[KickerTable] = {
+    try db.run(filterQuery(id).result.head)
+    finally db.close
+  }
+  def updateLastGoal(id: Long) = {
+    //val q = for { c <- kickerTables if c.id === id} yield c.lastGoalScored
+    //val updateAction = q.update(None)
+  }
+  private def filterQuery(id: Long): Query[KickerTables, KickerTable, Seq] =
+    kickerTables.filter(_.id === id)
 }

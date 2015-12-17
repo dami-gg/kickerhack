@@ -48,7 +48,19 @@ class GamesRepository {
     try db.run(filterQuery(id).result.head)
     finally db.close()
 
-  private def filterQuery(id: Long): Query[Games, Game, Seq] =
-    games.filter(_.id === id)
+  def findCurrentGameForTable(tableId: Long): Future[Option[Game]] =
+    try db.run(games.filter(_.table === tableId).filter(_.finishedOn.isEmpty).result.headOption)
+    finally db.close()
+
+  def updateGoalAway(gameId: Long, goalsAway: Int) = {
+    val q = for { c <- games if c.id === gameId} yield c.goalsAway
+    val updateAction = q.update(goalsAway)
+  }
+  def updateGoalHome(gameId: Long, goalsHome: Int) = {
+    val q = for { c <- games if c.id === gameId} yield c.goalsHome
+    val updateAction = q.update(goalsHome)
+  }
+    private def filterQuery(id: Long): Query[Games, Game, Seq] =
+  games.filter(_.id === id)
 
 }

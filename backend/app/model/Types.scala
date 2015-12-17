@@ -3,9 +3,15 @@ package model
 import java.util.UUID
 
 import org.joda.time.DateTime
+import play.api.data.validation.Constraints
+import play.api.libs.functional.syntax
+import play.api.libs.functional.syntax.toInvariantFunctorOps
 import play.api.libs.json._
 import model.Position._
 import model.Side._
+
+import scala.util.matching.Regex
+
 
 case class User(id: Option[Long], name: String)
 case class Color(color: String)
