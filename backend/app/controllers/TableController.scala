@@ -20,11 +20,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TableController @Inject()(authService: AuthServiceImpl, kickerTables: KickerTableRepository, gamesRepository: GamesRepository) extends Controller {
-class TableController @Inject()(authService: AuthServiceImpl, kickerTableRepository: KickerTableRepository) extends Controller  {
 
   def getTables = Action {
-    kickerTableRepository.createKickerTable(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
-    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
+    kickerTables.createKickerTable(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
+    val result: Seq[KickerTable] = Await.result(kickerTables.getAll(), scala.concurrent.duration.Duration.Inf)
     Ok(Json.toJson(result))
   }
 
