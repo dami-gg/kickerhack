@@ -25,4 +25,9 @@ class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository) extends 
     Await.result(nfcDataRepository.insertNfcData(data), Duration.Inf)
     Created
   }
+
+  def getAll = Action {
+    val result: Seq[NfcData] = Await.result(nfcDataRepository.getAll, Duration.Inf)
+    Ok(Json.toJson(result))
+  }
 }

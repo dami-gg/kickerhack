@@ -18,17 +18,17 @@ class Games(tag: Tag) extends Table[Game](tag, Some("kicker"), "game") {
       ts => new DateTime(ts.getTime)
     )
 
-  val id = column[Option[Long]]("g_id", O.AutoInc, O.PrimaryKey)
+  val id = column[Long]("g_id", O.AutoInc, O.PrimaryKey)
   val table = column[Long]("g_table_id")
-  val goalsHome = column[Short]("g_goals_home")
-  val goalsAway = column[Short]("g_goals_away")
+  val goalsHome = column[Int]("g_goals_home")
+  val goalsAway = column[Int]("g_goals_away")
   val startedOn = column[DateTime]("g_started_on")
-  val finishedOn = column[Option[DateTime]]("g_finished_on", O.Default(None))
+  val finishedOn = column[DateTime]("g_finished_on")
 
   lazy val kickertableFk = foreignKey("game_g_table_id_fkey", table, kickertable)(_.id)
   lazy val kickertable = TableQuery[KickerTables]
 
-  override def * = (id, table, goalsHome, goalsAway, startedOn, finishedOn) <>(Game.tupled, Game.unapply)
+  override def * = (id.?, table, goalsHome, goalsAway, startedOn, finishedOn.?) <> (Game.tupled, Game.unapply)
 }
 
 class GamesRepository {

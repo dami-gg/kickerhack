@@ -19,16 +19,16 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class TableController @Inject()(authService: AuthService, kickerTableRepository: KickerTableRepository) extends Controller  {
+class TableController @Inject()(authService: AuthServiceImpl, kickerTableRepository: KickerTableRepository) extends Controller  {
 
   def getTables = Action {
-    kickerTableRepository.insert(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
-    val result: Seq[KickerTable] = Await.result(kickerTableRepository.list(), scala.concurrent.duration.Duration.Inf)
+    kickerTableRepository.createKickerTable(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
+    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
     Ok(Json.toJson(result))
   }
 
   def getTable(tableId: Long) = Action.async {
-    kickerTables.findById(tableId).map{
+    kickerTableRepository.findById(tableId).map{
       kickerTable => Ok(Json.toJson(kickerTable))
     }
   }
