@@ -24,7 +24,7 @@ class TableController @Inject()(authService: AuthServiceImpl, kickerTableReposit
   def getTables = Action {
     kickerTableRepository.createKickerTable(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
     val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
-    Ok(Json.toJson(result))
+    Ok(Json.obj("tables" -> Json.toJson(result)))
   }
 
   def getTable(tableId: Long) = Action.async {
