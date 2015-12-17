@@ -20,8 +20,8 @@ class Games(tag: Tag) extends Table[Game](tag, Some("kicker"), "game") {
 
   val id = column[Option[Long]]("g_id", O.AutoInc, O.PrimaryKey)
   val table = column[Long]("g_table_id")
-  val goalsHome = column[Short]("g_goals_home")
-  val goalsAway = column[Short]("g_goals_away")
+  val goalsHome = column[Int]("g_goals_home")
+  val goalsAway = column[Int]("g_goals_away")
   val startedOn = column[DateTime]("g_started_on")
   val finishedOn = column[Option[DateTime]]("g_finished_on", O.Default(None))
 
@@ -48,7 +48,19 @@ class GamesRepository {
     try db.run(filterQuery(id).result.head)
     finally db.close()
 
-  private def filterQuery(id: Long): Query[Games, Game, Seq] =
-    games.filter(_.id === id)
+  def findCurrentGameForTable(tableId: Long): Future[Option[Game]] =
+    try db.run(games.filter(_.table === tableId).filter(_.finishedOn.isEmpty).result.headOption)
+    finally db.close()
+
+  def updateGoalAway(gameId: Long, goalsAway: Int) = {
+    val q = for { c <- games if c.id === gameId} yield c.goalsAway
+    val updateAction = q.update(goalsAway)
+  }
+  def updateGoalHome(gameId: Long, goalsHome: Int) = {
+    val q = for { c <- games if c.id === gameId} yield c.goalsHome
+    val updateAction = q.update(goalsHome)
+  }
+    private def filterQuery(id: Long): Query[Games, Game, Seq] =
+  games.filter(_.id === id)
 
 }

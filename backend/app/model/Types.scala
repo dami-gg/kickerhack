@@ -19,7 +19,7 @@ case class KickerTable(id: Option[Long], name: Option[String], building: String,
                        colorHome: Color, colorAway: Color, lastGoalScored: Option[DateTime])
 
 case class Player(id: Option[Long], user: Long, game: Long, position: Position, side: Side)
-case class Game(id: Option[Long], tableId: Long, goalsHome: Short, goalsAway: Short,
+case class Game(id: Option[Long], tableId: Long, goalsHome: Int, goalsAway: Int,
                 start: DateTime, end: Option[DateTime])
 
 case class NfcData(uuid: String, tableId: Long, side: Side, position: Position)

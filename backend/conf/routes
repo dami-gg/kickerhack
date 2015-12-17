@@ -17,11 +17,13 @@ GET     /me                         controllers.UserController.getMe
 GET     /tables                             controllers.TableController.getTables
 GET     /tables/:tableId                    controllers.TableController.getTable(tableId: Long)
 GET     /tables/:tableId/current_game       controllers.TableController.getCurrentGame(tableId: Long)
-POST    /tables/:tableId/sides/:side/goal   controllers.TableController.addGoal(tableId: Long, side: Side)
+POST    /tables/:tableId/sides/:side/goal   controllers.TableController.addGoal(tableId: Long, side: String)
 
 # Games
 GET     /games                      controllers.Application.getGames
 GET     /games/:gameId              controllers.Application.getGame(gameId: Long)
+DELETE  /games/:gameId              controllers.Application.getGame(gameId: Long)
+POST    /games/:gameId/finised      controllers.Application.getGame(gameId: Long)
 
 # NFC data
 GET     /nfc-data/:uuid             controllers.NfcController.getNfcData(uuid: String)

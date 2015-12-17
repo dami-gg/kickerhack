@@ -3,22 +3,23 @@ package controllers
 import javax.inject.Inject
 
 import model.JsonConversions._
-import model.{Color, KickerTable}
+import model.Side.Side
+import model.{Game, Color, KickerTable, Side}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import repository.KickerTableRepository
+import repository.{GamesRepository, KickerTableRepository}
 import service.AuthServiceImpl
 
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class TableController @Inject()(authService: AuthServiceImpl, kickerTables: KickerTableRepository) extends Controller {
+class TableController @Inject()(authService: AuthServiceImpl, kickerTables: KickerTableRepository, gamesRepository: GamesRepository) extends Controller {
 
-  def getTables = Action {
-    kickerTables.insert(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
-    val result: Seq[KickerTable] = Await.result(kickerTables.list(), scala.concurrent.duration.Duration.Inf)
-    Ok(Json.toJson(result))
+  def getTables = Action.async {
+    kickerTables.list().map {
+      tables => Ok(Json.toJson(tables))
+    }
   }
 
   def getTable(tableId: Long) = Action.async {
@@ -27,12 +28,25 @@ class TableController @Inject()(authService: AuthServiceImpl, kickerTables: Kick
     }
   }
 
-  def getCurrentGame(tableId: Long) = Action {
-    request => {
-      Ok("Should this not be implemented in the GameController?")
+  def getCurrentGame(tableId: Long) = Action.async {
+    gamesRepository.findCurrentGameForTable(tableId).map {
+      game => Ok(Json.toJson(game))
     }
   }
 
-  def addGoal()
+  def addGoal(tableId: Long, side: String) = Action.async{
+    kickerTables.updateLastGoal(tableId)
+    gamesRepository.findCurrentGameForTable(tableId).map {
+      case None => Future.successful()
+      case Some(game) =>
+        if (side.equals(Side.Away.toString)) {
+          gamesRepository.updateGoalAway(game.id.get, game.goalsAway + 1)
+        } else {
+          gamesRepository.updateGoalAway(game.id.get, game.goalsHome + 1)
+        }
+    }.flatMap{ _ =>
+      Future.successful(Ok("dfs"))
+    }
+  }
 }
 

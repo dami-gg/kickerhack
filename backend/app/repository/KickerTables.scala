@@ -53,7 +53,10 @@ class KickerTableRepository {
     try db.run(filterQuery(id).result.head)
     finally db.close
   }
-
+  def updateLastGoal(id: Long) = {
+    //val q = for { c <- kickerTables if c.id === id} yield c.lastGoalScored
+    //val updateAction = q.update(None)
+  }
   private def filterQuery(id: Long): Query[KickerTables, KickerTable, Seq] =
     kickerTables.filter(_.id === id)
 }
