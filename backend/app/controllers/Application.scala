@@ -32,7 +32,7 @@ class Application @Inject()(userRepo: UserRepository, authService: AuthServiceIm
   //
   val mockPlayers = List(Player(Some(1), 1, 1, Attack, Home), Player(Some(2), 2, 1, Defense, Home),
     Player(Some(3), 3, 1, Attack, Away), Player(Some(4), 4, 1, Defense, Away))
-  val mockGame = Game(Some(999), 567, mockPlayers, 5, 3, DateTime.now().minusMinutes(10), DateTime.now())
+  val mockGame = Game(Some(999), 567, 5, 3, DateTime.now().minusMinutes(10), Some(DateTime.now()))
   val mockGames = Map(999l -> mockGame)
 
   def getGames = getAll(mockGames, "games")
