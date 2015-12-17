@@ -6,28 +6,25 @@ import model.{JsonConversions, NfcData}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import repository.NfcDataRepository
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import JsonConversions._
 
 class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository) extends Controller {
 
-  def getNfcData(tag: String) = Action {
-    val nfcData: Option[NfcData] = Await.result(nfcDataRepository.getNfcData(tag), Duration.Inf)
-    nfcData match {
+  def getNfcData(tag: String) = Action.async {
+    nfcDataRepository.getNfcData(tag).map {
       case Some(data) => Ok(Json.toJson(data))
       case None => NotFound(tag)
     }
   }
 
-  def insertNfcData(data: NfcData) = Action {
-    Await.result(nfcDataRepository.insertNfcData(data), Duration.Inf)
-    Created
+  def insertNfcData(data: NfcData) = Action.async {
+    nfcDataRepository.insertNfcData(data).map(_ => Created)
   }
 
-  def getAll = Action {
-    val result: Seq[NfcData] = Await.result(nfcDataRepository.getAll, Duration.Inf)
-    Ok(Json.obj("nfc-data" -> Json.toJson(result)))
+  def getAll = Action.async {
+    nfcDataRepository.getAll.map(nfcData => Ok(Json.obj("nfc-data" -> Json.toJson(nfcData))))
   }
 }
