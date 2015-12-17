@@ -9,16 +9,30 @@ import play.api.libs.json.{Writes, JsObject, Json}
 import play.api.libs.json.Json
 import play.api.mvc._
 import model.JsonConversions._
-import repository.{KickerTableComponentImpl, UserRepository, PlayerRepository}
+
+import repository._
 import service.ConfigServiceImpl
 import model.Position._
 import model.Side._
+import JsonConversions._
 
-class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl {
+import scala.concurrent.duration.Duration
+
+class Application @Inject()(userRepo: UserRepository,
+                            nfcDataRepo: NfcDataRepository,
+                            kickerTableRepo: KickerTableRepository)
+  extends Controller with ConfigServiceImpl {
 import scala.concurrent.Await
 
 
   def health = Action {
+    val kickerTable = KickerTable(None, Some("OurTable"), "BMO", "1st",
+      Color("Blue"), Color("Red"), None)
+
+
+    val id = Await.result(kickerTableRepo.createKickerTable(kickerTable), Duration.Inf)
+    val nfcData = NfcData("nom-nom-nom", id, Home, Attack)
+    Await.result(nfcDataRepo.insertNfcData(nfcData), Duration.Inf)
     Ok("Alright then.")
   }
 
@@ -64,7 +78,7 @@ import scala.concurrent.Await
   //
   // NFC data
   //
-  val mockNfcData = NfcData(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"), 567, Home, Attack)
+  val mockNfcData = NfcData("de305d54-75b4-431b-adb2-eb6b9e546014", 567, Home, Attack)
   val mockNfcDatas = Map("de305d54-75b4-431b-adb2-eb6b9e546014" -> mockNfcData)
   def getNfcDatas = getAll(mockNfcDatas, "nfc-data")
   def getNfcData(uuid: String) = getById(uuid, mockNfcDatas)

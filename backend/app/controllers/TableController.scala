@@ -2,22 +2,24 @@ package controllers
 
 import javax.inject.Inject
 
-import model.KickerTable
+import model.{Color, KickerTable}
 import play.api.libs.json.{Json, JsObject}
 import play.api.mvc.{Action, Controller}
-import repository.{KickerTableComponentImpl, UserRepository}
+import repository.{KickerTableRepository, UserRepository}
 import service.AuthService
 import model.JsonConversions._
 
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 
 
-class TableController extends Controller
- with KickerTableComponentImpl {
+class TableController @Inject()(kickerTableRepository: KickerTableRepository) extends Controller  {
 
   def getTables = Action {
+    val ins = kickerTableRepository.createKickerTable(KickerTable(Some(1l), None, "foo", "bar", Color("Blue"), Color("Red"), None))
+    val res = Await.result(ins, scala.concurrent.duration.Duration.Inf)
     val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
     Ok(JsObject(Map("tables" -> Json.toJson(result))))
+
   }
 
   def getTable(tableId: Long) = Action {

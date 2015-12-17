@@ -25,7 +25,7 @@ class JsonConversions$Test extends Specification {
 
       json must equalTo(parsedVal)
     }
-    "be created from JSON" in {
+    "be created from JSON when the ID is present" in {
       val json: JsValue = Json.parse(
         """
           {
@@ -42,7 +42,24 @@ class JsonConversions$Test extends Specification {
       println(player)
       player.get must be equalTo Player(Some(1l), 2l, 3l, Position.Defense, Side.Away)
     }
-  }
+    "be created from JSON when no ID is present" in {
+      val json: JsValue = Json.parse(
+        """
+          {
+           "user" : 2,
+           "game" : 3,
+           "position" : "Defense",
+           "side" : "Away"
+          }
+        """)
 
+      val player: JsResult[Player] = Json.fromJson[Player](json)
+
+      println(player)
+      player.get must be equalTo Player(None, 2l, 3l, Position.Defense, Side.Away)
+    }
+
+
+  }
 
 }

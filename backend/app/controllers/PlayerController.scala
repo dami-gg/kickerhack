@@ -50,7 +50,7 @@ class PlayerController @Inject()(playerRepo: PlayerRepository) extends Controlle
     player.fold(
       errors => BadRequest,
       player => {
-        playerRepo.insert(Player(null, player.user, player.game, player.position, player.side))
+        playerRepo.insert(Player(null, player.userId, player.gameId, player.position, player.side))
         Created
       }
     )

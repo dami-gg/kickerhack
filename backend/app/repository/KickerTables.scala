@@ -21,7 +21,7 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     { l => new DateTime(l)}
   )
 
-  def id = column[Long]("kt_id", O.PrimaryKey)
+  def id = column[Long]("kt_id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("kt_name")
   def building = column[String]("kt_building")
   def floor = column[String]("kt_floor")
@@ -33,35 +33,24 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     ((KickerTable.apply _).tupled, KickerTable.unapply)
 }
 
-trait KickerTableComponent {
-  val kickerTableRepository: KickerTableRepository
-  trait KickerTableRepository {
-    def createKickerTable(kickerTable: KickerTable): Future[Int]
-    def getAll(): Future[Seq[KickerTable]]
-    def findById(id: Long): Future[Option[KickerTable]]
-  }
-}
 
-trait KickerTableComponentImpl extends KickerTableComponent {
-  override val kickerTableRepository = new KickerTableRepositoryImpl
-
-  class KickerTableRepositoryImpl extends KickerTableRepository{
+class KickerTableRepository {
     private val kickerTables = TableQuery[KickerTables]
 
     private def db = Database.forDataSource(DB.getDataSource())
 
-    override def createKickerTable(kickerTable: KickerTable): Future[Int] = {
-      val insertAction = kickerTables += kickerTable
+    def createKickerTable(kickerTable: KickerTable): Future[Long] = {
+      val insertAction = (kickerTables returning kickerTables.map(_.id)) += kickerTable
       try db.run(insertAction)
       finally db.close
     }
 
-    override def getAll(): Future[Seq[KickerTable]] = {
+    def getAll(): Future[Seq[KickerTable]] = {
       try db.run(kickerTables.result)
       finally db.close
     }
 
-    override def findById(id: Long): Future[Option[KickerTable]] = {
+    def findById(id: Long): Future[Option[KickerTable]] = {
       try {
         val query = kickerTables.filter(_.id === id)
         db.run(query.result.headOption)
@@ -70,6 +59,6 @@ trait KickerTableComponentImpl extends KickerTableComponent {
     }
 
 
-  }
+
 
 }

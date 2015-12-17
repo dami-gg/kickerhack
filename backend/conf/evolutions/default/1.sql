@@ -12,7 +12,7 @@ CREATE TABLE "kicker"."kickerTable" (
   kt_floor            TEXT NOT NULL,
   kt_color_home       TEXT NOT NULL,
   kt_color_away       TEXT NOT NULL,
-  kt_last_goal_scored TIMESTAMPTZ
+  kt_last_goal_scored BIGINT
 );
 
 # --- !Downs
