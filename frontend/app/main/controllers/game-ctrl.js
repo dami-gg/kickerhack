@@ -16,6 +16,7 @@ angular.module('main')
 
       vm.loggedInUser = LoginService.isLoggedIn();
 
+      // TODO: call this periodically to allow auto-refresh
       TablesService.getCurrentGameInTable(this.tableId)
         .then(function (response) {
           if (response !== null) {
