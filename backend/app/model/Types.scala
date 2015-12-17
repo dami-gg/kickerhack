@@ -1,7 +1,5 @@
 package model
 
-import java.util.UUID
-
 import org.joda.time.DateTime
 import play.api.data.validation.Constraints
 import play.api.libs.functional.syntax
@@ -16,7 +14,7 @@ import scala.util.matching.Regex
 case class User(id: Option[Long], name: String)
 case class Color(color: String)
 case class KickerTable(id: Option[Long], name: Option[String], building: String, floor: String,
-                       colorHome: Color, colorAway: Color, lastGoalScored: Option[DateTime])
+                       colorHome: Color, colorAway: Color, lastGoalScored: Option[DateTime], password: String)
 
 case class Player(id: Option[Long], userId: Long, gameId: Long, position: Position, side: Side)
 case class Game(id: Option[Long], tableId: Long, goalsHome: Int, goalsAway: Int,
