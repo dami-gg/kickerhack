@@ -12,7 +12,7 @@ import model.JsonConversions._
 import scala.concurrent.Await
 
 
-class TableController @Inject()(userRepo: UserRepository) extends Controller
+class TableController extends Controller
  with KickerTableComponentImpl {
 
   def getTables = Action {
@@ -32,13 +32,13 @@ class TableController @Inject()(userRepo: UserRepository) extends Controller
 
   def getCurrentGame(tableId: Long) = Action {
     request => {
-      Ok("cxxcxy")
+      Ok("Should this not be implemented in the GameController?")
     }
   }
-  
+
   def registerPlayer(tableId: Long) = Action {
     request => {
-      Ok("cxxcxy")
+      Ok("Should this not be implemented in the PlayerController?")
     }
   }
 }

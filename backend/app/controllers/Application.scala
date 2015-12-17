@@ -14,7 +14,7 @@ import service.ConfigServiceImpl
 import model.Position._
 import model.Side._
 
-class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl with KickerTableComponentImpl {
+class Application @Inject()(userRepo: UserRepository) extends Controller with ConfigServiceImpl {
 import scala.concurrent.Await
 
 

@@ -3,9 +3,14 @@ package model
 import java.util.UUID
 
 import org.joda.time.DateTime
+import play.api.data.validation.Constraints
+import play.api.libs.functional.syntax
+import play.api.libs.functional.syntax.toInvariantFunctorOps
 import play.api.libs.json._
 import model.Position._
 import model.Side._
+
+import scala.util.matching.Regex
 
 
 case class User(id: Option[Long], name: String)
@@ -25,21 +30,7 @@ object JsonConversions {
   implicit val colorWrites = new Writes[Color] { override def writes(o: Color): JsValue = JsString(o.color) }
   implicit val tableWrites = Json.writes[KickerTable]
 
-  implicit val PositionWrites = new Writes[Position] {
-    override def writes(o: Position): JsValue = JsString(o match {
-      case Defense => "defense"
-      case Attack => "attack"
-    })
-  }
-
-  implicit val sideWrites = new Writes[Side] {
-    override def writes(o: Side): JsValue = JsString(o match {
-      case Home => "home"
-      case Away => "away"
-    })
-  }
-
-  implicit val playerWrites = Json.writes[Player]
+  implicit val playerFormat = Json.format[Player]
   implicit val gameWrites = Json.writes[Game]
   implicit val uuidWrites = new Writes[UUID] { override def writes(o: UUID): JsValue = JsString(o.toString) }
   implicit val nfcDataWrites = Json.writes[NfcData]
