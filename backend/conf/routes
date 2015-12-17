@@ -9,16 +9,15 @@ GET     /                           controllers.Application.health
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # Players
-GET     /users                      controllers.Application.getUsers
-GET     /users/:userId              controllers.Application.getUser(userId: Long)
-POST    /users                      controllers.Application.addUser
-GET    /test                       controllers.Application.test
+GET     /users                      controllers.UserController.getUsers
+GET     /users/:userId              controllers.UserController.getUser(userId: Long)
+GET     /me                         controllers.UserController.getMe
 
 # Tables
-GET     /tables                       controllers.TableController.getTables
-GET     /tables/:tableId              controllers.TableController.getTable(tableId: Long)
-GET     /tables/:tableId/current-game controllers.TableController.getCurrentGame(tableId: Long)
-PUT     /tables/:tableId/current-game controllers.TableController.registerPlayer(tableId: Long)
+GET     /tables                             controllers.TableController.getTables
+GET     /tables/:tableId                    controllers.TableController.getTable(tableId: Long)
+GET     /tables/:tableId/current_game       controllers.TableController.getCurrentGame(tableId: Long)
+POST    /tables/:tableId/sides/:side/goal   controllers.TableController.addGoal(tableId: Long, side: Side)
 
 # Games
 GET     /games                      controllers.Application.getGames
@@ -26,4 +25,4 @@ GET     /games/:gameId              controllers.Application.getGame(gameId: Long
 
 # NFC data
 GET     /nfc-data/:uuid             controllers.NfcController.getNfcData(uuid: String)
-
+PUT     /nfc-data/:uuid             controllers.NfcController.registerPlayer(uuid: String)

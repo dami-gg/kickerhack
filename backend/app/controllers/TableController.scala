@@ -4,7 +4,6 @@ import javax.inject.Inject
 
 import model.JsonConversions._
 import model.{Color, KickerTable}
-import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import repository.KickerTableRepository
@@ -23,7 +22,7 @@ class TableController @Inject()(authService: AuthServiceImpl, kickerTables: Kick
   }
 
   def getTable(tableId: Long) = Action.async {
-    kickerTables.findById(tableId).map{
+    kickerTables.findById(tableId).map {
       kickerTable => Ok(Json.toJson(kickerTable))
     }
   }
@@ -34,8 +33,6 @@ class TableController @Inject()(authService: AuthServiceImpl, kickerTables: Kick
     }
   }
 
-  def registerPlayer(tableId: Long) = Action.async { request =>
-    authService.auth(request).map { user => Ok(Json.toJson(user)) }
-  }
+  def addGoal()
 }
 

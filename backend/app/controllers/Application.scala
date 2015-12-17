@@ -28,34 +28,6 @@ class Application @Inject()(userRepo: UserRepository, authService: AuthServiceIm
   }
 
   //
-  // Users
-  //
-
-  def getUsers = Action {
-    request => {
-      val users: Seq[User] = Await.result(userRepo.list(), scala.concurrent.duration.Duration.Inf)
-
-      Ok(JsObject(Map("users" -> Json.toJson(users))))
-    }
-  }
-
-  def getUser(userId: Long) = Action {
-    val user: User = Await.result(userRepo.findById(userId), scala.concurrent.duration.Duration.Inf)
-    Ok(Json.toJson(user))
-  }
-
-  def addUser = Action(parse.json) { request =>
-    val user = request.body.validate[User]
-    user.fold(
-      errors => BadRequest,
-      user => {
-        userRepo.insert(User(null, user.name))
-        Created
-      }
-    )
-  }
-
-  //
   // Games
   //
   val mockPlayers = List(Player(Some(1), 1, 1, Attack, Home), Player(Some(2), 2, 1, Defense, Home),
