@@ -13,7 +13,8 @@ import scala.concurrent.duration.Duration
 
 
 class Application @Inject()(kickerTableRepo: KickerTableRepository,
-                            gamesRepo: GamesRepository
+                            gamesRepo: GamesRepository,
+                            nfcDataRepo: NfcDataRepository
                            ) extends Controller {
   def health = Action {
 
@@ -21,6 +22,8 @@ class Application @Inject()(kickerTableRepo: KickerTableRepository,
     val tableId = Await.result(kickerTableRepo.createKickerTable(table), Duration.Inf)
     val game = Game(None, tableId, 3, 4, DateTime.now(), None)
     val gameId: Int = Await.result(gamesRepo.insert(game), Duration.Inf)
+    val nfcData = NfcData("osrainoiant", tableId, Side.Home, Position.Attack)
+    Await.result(nfcDataRepo.insertNfcData(nfcData), Duration.Inf)
     Ok("Alright then.")
   }
 }
