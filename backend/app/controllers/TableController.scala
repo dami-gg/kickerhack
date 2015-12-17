@@ -8,27 +8,28 @@ import play.api.mvc.{Action, Controller}
 import repository.{KickerTableRepository, UserRepository}
 import service.AuthService
 import model.JsonConversions._
+import model.{Color, KickerTable}
+import org.joda.time.DateTime
+import play.api.libs.json.Json
+import play.api.mvc.{Action, Controller}
+import repository.KickerTableRepository
+import service.AuthServiceImpl
 
-import scala.concurrent.{Future, Await}
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class TableController @Inject()(kickerTableRepository: KickerTableRepository) extends Controller  {
+class TableController @Inject()(authService: AuthService, kickerTableRepository: KickerTableRepository) extends Controller  {
 
   def getTables = Action {
-    val ins = kickerTableRepository.createKickerTable(KickerTable(Some(1l), None, "foo", "bar", Color("Blue"), Color("Red"), None))
-    val res = Await.result(ins, scala.concurrent.duration.Duration.Inf)
-    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
-    Ok(JsObject(Map("tables" -> Json.toJson(result))))
-
+    kickerTableRepository.insert(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
+    val result: Seq[KickerTable] = Await.result(kickerTableRepository.list(), scala.concurrent.duration.Duration.Inf)
+    Ok(Json.toJson(result))
   }
 
-  def getTable(tableId: Long) = Action {
-    val result: Option[KickerTable] = Await.result(kickerTableRepository.findById(tableId),
-      scala.concurrent.duration.Duration.Inf)
-
-    result match {
-      case Some(table) => Ok(Json.toJson(table))
-      case None => NotFound
+  def getTable(tableId: Long) = Action.async {
+    kickerTables.findById(tableId).map{
+      kickerTable => Ok(Json.toJson(kickerTable))
     }
   }
 
@@ -38,10 +39,8 @@ class TableController @Inject()(kickerTableRepository: KickerTableRepository) ex
     }
   }
 
-  def registerPlayer(tableId: Long) = Action {
-    request => {
-      Ok("Should this not be implemented in the PlayerController?")
-    }
+  def registerPlayer(tableId: Long) = Action.async { request =>
+    authService.auth(request).map { user => Ok(Json.toJson(user)) }
   }
 }
 
