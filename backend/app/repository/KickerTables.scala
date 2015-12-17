@@ -32,35 +32,41 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     ((KickerTable.apply _).tupled, KickerTable.unapply)
 }
 
-class KickerTableRepository {
+trait KickerTableRepository {
 
-  private val kickerTables = TableQuery[KickerTables]
+  def repository = new KickerTableRepository
 
-  private def db = Database.forDataSource(DB.getDataSource())
+  class KickerTableRepository {
 
-  def createKickerTable(kickerTable: KickerTable): Future[Long] = {
-    val insertAction = (kickerTables returning kickerTables.map(_.id)) += kickerTable
-    try db.run(insertAction)
-    finally db.close
+    private val kickerTables = TableQuery[KickerTables]
+
+    private def db = Database.forDataSource(DB.getDataSource())
+
+    def createKickerTable(kickerTable: KickerTable): Future[Long] = {
+      val insertAction = (kickerTables returning kickerTables.map(_.id)) += kickerTable
+      try db.run(insertAction)
+      finally db.close
+    }
+
+    def getAll(): Future[Seq[KickerTable]] =
+      try db.run(kickerTables.result)
+      finally db.close
+
+    def findById(id: Long): Future[KickerTable] =
+      try db.run(filterQuery(id).result.head)
+      finally db.close
+
+    def updateLastGoal(id: Long) = {
+      //val q = for { c <- kickerTables if c.id === id} yield c.lastGoalScored
+      //val updateAction = q.update(None)
+    }
+
+    def findByIdAndPassword(id: Long, password: String): Future[Option[KickerTable]] =
+      try db.run(kickerTables.filter(_.id === id).filter(_.password === password).result.headOption)
+      finally db.close
+
+    private def filterQuery(id: Long): Query[KickerTables, KickerTable, Seq] =
+      kickerTables.filter(_.id === id)
   }
 
-  def getAll(): Future[Seq[KickerTable]] =
-    try db.run(kickerTables.result)
-    finally db.close
-
-  def findById(id: Long): Future[KickerTable] =
-    try db.run(filterQuery(id).result.head)
-    finally db.close
-
-  def updateLastGoal(id: Long) = {
-    //val q = for { c <- kickerTables if c.id === id} yield c.lastGoalScored
-    //val updateAction = q.update(None)
-  }
-
-  def findByIdAndPassword(id: Long, password: String): Future[Option[KickerTable]] =
-    try db.run(kickerTables.filter(_.id === id).filter(_.password === password).result.headOption)
-    finally db.close
-
-  private def filterQuery(id: Long): Query[KickerTables, KickerTable, Seq] =
-    kickerTables.filter(_.id === id)
 }

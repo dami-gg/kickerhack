@@ -4,13 +4,13 @@ import play.api.libs.json._
 
 case object Side extends Enumeration {
   type Side = Value
-  val Home = Value("Home")
-  val Away = Value("Away")
+  val HOME = Value("HOME")
+  val AWAY = Value("AWAY")
 
   implicit val sideWrites = new Writes[Side] {
     override def writes(o: Side): JsValue = JsString(o match {
-      case Home => "Home"
-      case Away => "Away"
+      case HOME => "HOME"
+      case AWAY => "AWAY"
     })
   }
   implicit val sideReads: Reads[Side] = new Reads[Side] {

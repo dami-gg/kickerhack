@@ -2,7 +2,7 @@ package repository
 
 import java.sql.Timestamp
 
-import model.{Game}
+import model.Game
 import org.joda.time.DateTime
 import play.api.db.DB
 import slick.driver.PostgresDriver.api._
@@ -28,10 +28,11 @@ class Games(tag: Tag) extends Table[Game](tag, Some("kicker"), "game") {
   lazy val kickertableFk = foreignKey("game_g_table_id_fkey", table, kickertable)(_.id)
   lazy val kickertable = TableQuery[KickerTables]
 
-  override def * = (id.?, table, goalsHome, goalsAway, startedOn, finishedOn) <> (Game.tupled, Game.unapply)
+  override def * = (id.?, table, goalsHome, goalsAway, startedOn, finishedOn) <>(Game.tupled, Game.unapply)
 }
 
 class GamesRepository {
+
   private val games = TableQuery[Games]
 
   private def db: Database = Database.forDataSource(DB.getDataSource())
@@ -53,14 +54,16 @@ class GamesRepository {
     finally db.close()
 
   def updateGoalAway(gameId: Long, goalsAway: Int) = {
-    val q = for { c <- games if c.id === gameId} yield c.goalsAway
-    val updateAction = q.update(goalsAway)
+    val q = for {c <- games if c.id === gameId} yield c.goalsAway
+    db.run(q.update(goalsAway))
   }
+
   def updateGoalHome(gameId: Long, goalsHome: Int) = {
-    val q = for { c <- games if c.id === gameId} yield c.goalsHome
-    val updateAction = q.update(goalsHome)
+    val q = for {c <- games if c.id === gameId} yield c.goalsHome
+    db.run(q.update(goalsHome))
   }
-    private def filterQuery(id: Long): Query[Games, Game, Seq] =
-  games.filter(_.id === id)
+
+  private def filterQuery(id: Long): Query[Games, Game, Seq] =
+    games.filter(_.id === id)
 
 }
