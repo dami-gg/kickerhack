@@ -22,7 +22,7 @@ case class Player(id: Option[Long], user: Long, game: Long, position: Position, 
 case class Game(id: Option[Long], tableId: Long, players: List[Player], goalsHome: Int, goalsAway: Int,
                 start: DateTime, end: DateTime)
 
-case class NfcData(uuid: UUID, tableId: Long, side: Side, position: Position)
+case class NfcData(uuid: String, tableId: Long, side: Side, position: Position)
 
 object JsonConversions {
   implicit val userWrites = Json.writes[User]

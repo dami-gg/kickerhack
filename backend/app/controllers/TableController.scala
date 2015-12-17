@@ -2,31 +2,29 @@ package controllers
 
 import javax.inject.Inject
 
-import model.KickerTable
-import play.api.libs.json.{Json, JsObject}
-import play.api.mvc.{Action, Controller}
-import repository.{KickerTableComponentImpl, UserRepository}
-import service.AuthService
 import model.JsonConversions._
+import model.{Color, KickerTable}
+import org.joda.time.DateTime
+import play.api.libs.json.Json
+import play.api.mvc.{Action, Controller}
+import repository.KickerTableRepository
+import service.AuthServiceImpl
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class TableController extends Controller
- with KickerTableComponentImpl {
+class TableController @Inject()(authService: AuthServiceImpl, kickerTables: KickerTableRepository) extends Controller {
 
   def getTables = Action {
-    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
-    Ok(JsObject(Map("tables" -> Json.toJson(result))))
+    kickerTables.insert(KickerTable(None, Option("blabla"), "asdlk", "1", Color("red"), Color("black"), None))
+    val result: Seq[KickerTable] = Await.result(kickerTables.list(), scala.concurrent.duration.Duration.Inf)
+    Ok(Json.toJson(result))
   }
 
-  def getTable(tableId: Long) = Action {
-    val result: Option[KickerTable] = Await.result(kickerTableRepository.findById(tableId),
-      scala.concurrent.duration.Duration.Inf)
-
-    result match {
-      case Some(table) => Ok(Json.toJson(table))
-      case None => NotFound
+  def getTable(tableId: Long) = Action.async {
+    kickerTables.findById(tableId).map{
+      kickerTable => Ok(Json.toJson(kickerTable))
     }
   }
 
@@ -36,10 +34,8 @@ class TableController extends Controller
     }
   }
 
-  def registerPlayer(tableId: Long) = Action {
-    request => {
-      Ok("Should this not be implemented in the PlayerController?")
-    }
+  def registerPlayer(tableId: Long) = Action.async { request =>
+    authService.auth(request).map { user => Ok(Json.toJson(user)) }
   }
 }
 

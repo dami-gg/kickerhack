@@ -1,16 +1,15 @@
 package repository
 
-import model.{Color, KickerTable, User}
+import model._
 import org.joda.time.DateTime
-import slick.dbio.Effect.Read
-import slick.lifted.Tag
+import play.api.Play.current
 import play.api.db.DB
 import slick.driver.PostgresDriver.api._
-import play.api.Play.current
-import slick.profile.FixedSqlStreamingAction
+
 import scala.concurrent.Future
 
 class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "kickerTable") {
+
   implicit val colorColumnType = MappedColumnType.base[Color, String](
     { c => c match { case Color(s) => s}},
     { s => Color(s) }
@@ -21,7 +20,7 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     { l => new DateTime(l)}
   )
 
-  def id = column[Long]("kt_id", O.PrimaryKey)
+  def id = column[Long]("kt_id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("kt_name")
   def building = column[String]("kt_building")
   def floor = column[String]("kt_floor")
@@ -33,43 +32,28 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     ((KickerTable.apply _).tupled, KickerTable.unapply)
 }
 
-trait KickerTableComponent {
-  val kickerTableRepository: KickerTableRepository
-  trait KickerTableRepository {
-    def createKickerTable(kickerTable: KickerTable): Future[Int]
-    def getAll(): Future[Seq[KickerTable]]
-    def findById(id: Long): Future[Option[KickerTable]]
-  }
-}
+class KickerTableRepository {
+  private val kickerTables = TableQuery[KickerTables]
 
-trait KickerTableComponentImpl extends KickerTableComponent {
-  override val kickerTableRepository = new KickerTableRepositoryImpl
+  private def db: Database = Database.forDataSource(DB.getDataSource())
 
-  class KickerTableRepositoryImpl extends KickerTableRepository{
-    private val kickerTables = TableQuery[KickerTables]
+  def insert(kickerTable: KickerTable): Future[Int] =
+    try db.run(kickerTables += kickerTable)
+    finally db.close
 
-    private def db = Database.forDataSource(DB.getDataSource())
-
-    override def createKickerTable(kickerTable: KickerTable): Future[Int] = {
-      val insertAction = kickerTables += kickerTable
-      try db.run(insertAction)
-      finally db.close
+  def list(): Future[Seq[KickerTable]] = {
+    try {
+      db.run(kickerTables.result)
+    } finally {
+      db.close()
     }
-
-    override def getAll(): Future[Seq[KickerTable]] = {
-      try db.run(kickerTables.result)
-      finally db.close
-    }
-
-    override def findById(id: Long): Future[Option[KickerTable]] = {
-      try {
-        val query = kickerTables.filter(_.id === id)
-        db.run(query.result.headOption)
-      }
-      finally db.close
-    }
-
-
   }
 
+  def findById(id: Long): Future[KickerTable] = {
+    try db.run(filterQuery(id).result.head)
+    finally db.close
+  }
+
+  private def filterQuery(id: Long): Query[KickerTables, KickerTable, Seq] =
+    kickerTables.filter(_.id === id)
 }
