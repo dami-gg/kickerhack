@@ -1,7 +1,12 @@
 # --- !Ups
 
 CREATE TABLE "kicker"."game" (
-  g_id BIGSERIAL NOT NULL PRIMARY KEY
+  g_id BIGSERIAL NOT NULL PRIMARY KEY,
+  g_table_id BIGINT NOT NULL REFERENCES "kicker"."kickerTable" (kt_id),
+  g_goals_home SMALLINT NOT NULL,
+  g_goals_away SMALLINT NOT NULL,
+  g_started_on TIMESTAMP NOT NULL,
+  g_finished_on TIMESTAMP
 );
 CREATE TABLE "kicker"."player" (
   p_id       BIGSERIAL    NOT NULL PRIMARY KEY,
@@ -14,5 +19,5 @@ CREATE TABLE "kicker"."player" (
 
 # --- !Downs
 
-DROP TABLE "kicker"."player";
 DROP TABLE "kicker"."game";
+DROP TABLE "kicker"."player";

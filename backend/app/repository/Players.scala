@@ -13,7 +13,7 @@ import model.Position.Position
 class Players(tag: Tag) extends Table[Player](tag, Some("kicker"), "player") {
   implicit val positionColumnType = MappedColumnType.base[Position, String](d => d.toString, d => Position.withName(d))
   implicit val sideColumnType = MappedColumnType.base[Side, String](d => d.toString, d => Side.withName(d))
-  
+
   def id = column[Long]("p_id", O.PrimaryKey, O.AutoInc)
   def user = column[Long]("p_user_id")
   def game = column[Long]("p_game_id")
@@ -32,16 +32,13 @@ class PlayerRepository {
     try db.run(players += player)
     finally db.close
 
-  def list(): Future[Seq[Player]] = {
-    try {
-      db.run(players.result)
-    } finally { db.close() }
-  }
+  def list(): Future[Seq[Player]] =
+    try db.run(players.result)
+    finally db.close
 
-  def findById(id: Long): Future[Player] = {
+  def findById(id: Long): Future[Player] =
     try db.run(filterQuery(id).result.head)
     finally db.close
-  }
 
   private def filterQuery(id: Long): Query[Players, Player, Seq] =
     players.filter(_.id === id)
