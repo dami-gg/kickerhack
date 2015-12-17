@@ -2,19 +2,19 @@ package controllers
 
 import javax.inject.Inject
 
-import model.{Color, KickerTable}
+import model._
 import play.api.libs.json.{Json, JsObject}
 import play.api.mvc.{Action, Controller}
 import repository.{KickerTableRepository, UserRepository}
 import service.AuthService
 import model.JsonConversions._
 import model.Side.Side
-import model.{Game, Color, KickerTable, Side}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import repository.{GamesRepository, KickerTableRepository}
 import service.AuthServiceImpl
 
+import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -22,13 +22,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class TableController @Inject()(authService: AuthServiceImpl, kickerTables: KickerTableRepository, gamesRepository: GamesRepository) extends Controller {
 
   def getTables = Action {
-    val result: Seq[KickerTable] = Await.result(kickerTableRepository.getAll(), scala.concurrent.duration.Duration.Inf)
+    val result: Seq[KickerTable] = Await.result(kickerTables.getAll(), scala.concurrent.duration.Duration.Inf)
     Ok(Json.obj("tables" -> Json.toJson(result)))
   }
 
   def getTable(tableId: Long) = Action.async {
     kickerTables.findById(tableId).map {
-      kickerTable => Ok(Json.toJson(kickerTable))
+      case Some(table) => Ok(Json.toJson(table))
+      case None => NotFound("Table not found: " + tableId)
     }
   }
 

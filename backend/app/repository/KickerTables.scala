@@ -49,8 +49,8 @@ class KickerTableRepository {
       finally db.close
     }
 
-  def findById(id: Long): Future[KickerTable] = {
-    try db.run(filterQuery(id).result.head)
+  def findById(id: Long): Future[Option[KickerTable]] = {
+    try db.run(filterQuery(id).result.headOption)
     finally db.close
   }
   def updateLastGoal(id: Long) = {
