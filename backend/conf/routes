@@ -3,15 +3,15 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.health
+GET     /                                   controllers.Application.health
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 
 # Players
-GET     /users                      controllers.UserController.getUsers
-GET     /users/:userId              controllers.UserController.getUser(userId: Long)
-GET     /me                         controllers.UserController.getMe
+GET     /users                              controllers.UserController.getUsers
+GET     /users/:userId                      controllers.UserController.getUser(userId: Long)
+GET     /me                                 controllers.UserController.getMe
 
 # Tables
 GET     /tables                             controllers.KickerTableController.getTables

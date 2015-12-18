@@ -2,18 +2,23 @@ package controllers
 
 import javax.inject.Inject
 
-import model.{JsonConversions, NfcData}
+import model.JsonConversions._
+import model.{User, JsonConversions, NfcData}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import repository.NfcDataRepository
 import service.AuthService
+import repository.{GamesRepository, KickerTableRepository, NfcDataRepository}
+import service.AuthServiceImpl
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import JsonConversions._
+import scala.concurrent.{Await, Future}
+import scala.util.{Success, Failure, Try}
 
 class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository,
-                                  authService: AuthService
+                                  authService: AuthService,
+                                  gamesRepo: GamesRepository
                                  ) extends Controller {
 
   def getNfcData(tag: String) = Action.async {
@@ -31,7 +36,25 @@ class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository,
     nfcDataRepository.getAll.map(nfcData => Ok(Json.obj("nfc-data" -> Json.toJson(nfcData))))
   }
 
-  def registerPlayer(uuid: String) = Action.async { request =>
-    authService.auth(request).map { user => Ok(Json.toJson(user)) }
+  def registerPlayer(uuid: String) = Action { request =>
+      val currentUser = Await.ready(authService.auth(request), Duration.Inf).value.get match {
+        case Success(t) => t
+        case Failure(e) => throw new IllegalArgumentException();
+      }
+      val nfcData = Await.ready(nfcDataRepository.getNfcData(uuid), Duration.Inf).value.get match {
+        case Success(t) => t.getOrElse(throw new IllegalArgumentException())
+        case Failure(e) => throw new IllegalArgumentException();
+      }
+      val game = Await.ready(gamesRepo.findCurrentGameForTable(nfcData.tableId), Duration.Inf).value.get match {
+        case Success(t) => t
+        case Failure(e) => throw new IllegalArgumentException();
+      }
+      if(game.nonEmpty){
+        //try to register player
+      }else{
+        //create game
+      }
+
+      Ok("sdf")
   }
 }

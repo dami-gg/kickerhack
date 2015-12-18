@@ -19,9 +19,8 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
                                       gamesRepo: GamesRepository,
                                       kickerTableRepo: KickerTableRepository) extends Controller{
 
-  def getTables = Action {
-    val result: Seq[KickerTable] = Await.result(kickerTableRepo.getAll(), scala.concurrent.duration.Duration.Inf)
-    Ok(Json.obj("tables" -> Json.toJson(result)))
+  def getTables = Action.async {
+    kickerTableRepo.getAll().map(tables => Ok(Json.obj("tables" -> Json.toJson(tables))))
   }
 
   def getTable(tableId: Long) = Action.async {
@@ -48,7 +47,7 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
           gamesRepo.updateGoalHome(game.id.get, game.goalsHome + 1)
         }
     }.flatMap{ _ =>
-      Future.successful(Ok("dfs"))
+      Future.successful(Ok("sdfd"))
     }
   }
 }
