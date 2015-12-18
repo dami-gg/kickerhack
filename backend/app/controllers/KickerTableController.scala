@@ -37,13 +37,13 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
     }
   }
 
-  def addGoal(side: String) = basicAuth.async { request =>
-    kickerTableRepo.updateLastGoal(request.table.id.get)
-    gamesRepo.findCurrentGameForTable(request.table.id.get).map {
+  def addGoal(tableId: Long, side: String) = Action.async { request =>
+    kickerTableRepo.updateLastGoal(tableId)
+    gamesRepo.findCurrentGameForTable(tableId).map {
       case None => Future.successful()
       case Some(game) =>
         if(game.goalsAway>4 || game.goalsHome>4 ){
-          gamesRepo.closeGame(game.id.get)
+          //gamesRepo.closeGame(game.id.get)
         }
         if (side == Side.AWAY.toString) {
           gamesRepo.updateGoalAway(game.id.get, game.goalsAway + 1)
