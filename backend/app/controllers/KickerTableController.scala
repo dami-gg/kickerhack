@@ -42,13 +42,15 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
     gamesRepo.findCurrentGameForTable(tableId).map {
       case None => Future.successful()
       case Some(game) =>
-        if(game.goalsAway>4 || game.goalsHome>4 ){
-          //gamesRepo.closeGame(game.id.get)
+        val goalsAway = game.goalsAway + (if (side == Side.AWAY.toString) 1 else 0)
+        val goalsHome = game.goalsHome + (if (side == Side.HOME.toString) 1 else 0)
+        if (goalsAway > game.goalsAway) {
+          gamesRepo.updateGoalAway(game.id.get, goalsAway)
+        } else if (goalsHome > game.goalsHome) {
+          gamesRepo.updateGoalHome(game.id.get, goalsHome)
         }
-        if (side == Side.AWAY.toString) {
-          gamesRepo.updateGoalAway(game.id.get, game.goalsAway + 1)
-        } else {
-          gamesRepo.updateGoalHome(game.id.get, game.goalsHome + 1)
+        if (goalsAway == 6 || goalsHome == 6) {
+          gamesRepo.finishGame(game.id.get)
         }
     }.flatMap{ _ =>
       Future.successful(Ok("Goal was added."))
