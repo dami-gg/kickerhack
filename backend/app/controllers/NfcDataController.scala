@@ -47,7 +47,7 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
       case Failure(e) => throw new IllegalArgumentException();
     }
     if (game.isEmpty) {
-      val newGame = Game(None, nfcData.tableId, 0, 0, DateTime.now(), None)
+      val newGame = Game(None, nfcData.tableId, 0, 0, DateTime.now().getMillis, None)
       val newGameId = Await.ready(gamesRepository.insert(newGame), Duration.Inf).value.get match {
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();

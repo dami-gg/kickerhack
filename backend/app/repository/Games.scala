@@ -58,7 +58,7 @@ class GamesRepository {
   }
 
   def startNewGame(tableId: Long): Future[Game] = {
-    insert(Game(None, tableId, 0, 0, DateTime.now(), None))
+    insert(Game(None, tableId, 0, 0, DateTime.now().getMillis, None))
   }
 
   def finishGame(gameId: Long) = {
