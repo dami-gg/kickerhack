@@ -32,13 +32,13 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
     nfcDataRepository.getAll.map(nfcData => Ok(Json.obj("nfc-data" -> Json.toJson(nfcData))))
   }
 
-  def registerPlayer(uuid: String) = Action { request =>
+  def registerPlayer(nfcTag: String) = Action { request =>
     var returnCode = Ok("Game created")
     val currentUser = Await.ready(authService.auth(request), Duration.Inf).value.get match {
       case Success(t) => t
       case Failure(e) => throw new IllegalArgumentException();
     }
-    val nfcData = Await.ready(nfcDataRepository.getNfcData(uuid), Duration.Inf).value.get match {
+    val nfcData = Await.ready(nfcDataRepository.getNfcData(nfcTag), Duration.Inf).value.get match {
       case Success(t) => t.getOrElse(throw new IllegalArgumentException())
       case Failure(e) => throw new IllegalArgumentException();
     }
