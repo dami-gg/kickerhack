@@ -1,7 +1,6 @@
 package repository
 
 import model.{Color, KickerTable}
-import org.joda.time.DateTime
 import slick.lifted.Tag
 import play.api.db.DB
 import slick.driver.PostgresDriver.api._
@@ -14,10 +13,10 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
     { case s => Color(s) }
   )
 
-  implicit val dateTimeColumnType = MappedColumnType.base[DateTime, Long](
-    { case d => d.getMillis },
-    { case l => new DateTime(l)}
-  )
+//  implicit val dateTimeColumnType = MappedColumnType.base[DateTime, Long](
+//    { case d => d.getMillis },
+//    { case l => new DateTime(l)}
+//  )
 
   def id = column[Long]("kt_id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("kt_name")
@@ -25,7 +24,7 @@ class KickerTables(tag: Tag) extends Table[KickerTable](tag, Some("kicker"), "ki
   def floor = column[String]("kt_floor")
   def colorHome = column[Color]("kt_color_home")
   def colorAway = column[Color]("kt_color_away")
-  def lastGoalScored = column[DateTime]("kt_last_goal_scored")
+  def lastGoalScored = column[Long]("kt_last_goal_scored")
   def password = column[String]("kt_password")
 
   override def * = (id.?, name.?, building, floor, colorHome, colorAway, lastGoalScored.?, password) <>
@@ -57,8 +56,8 @@ trait KickerTableRepository {
       finally db.close
 
     def updateLastGoal(id: Long) = {
-      //val q = for { c <- kickerTables if c.id === id} yield c.lastGoalScored
-      //val updateAction = q.update(None)
+      val q = for { c <- kickerTables if c.id === id} yield c.lastGoalScored
+      db.run(q.update(System.currentTimeMillis()))
     }
 
     def findByIdAndPassword(id: Long, password: String): Future[Option[KickerTable]] =
