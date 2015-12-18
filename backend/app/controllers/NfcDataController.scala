@@ -34,6 +34,7 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
   }
 
   def registerPlayer(uuid: String) = Action { request =>
+      var returnCode = Ok("Game created")
       val currentUser = Await.ready(authService.auth(request), Duration.Inf).value.get match {
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();
@@ -61,9 +62,11 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
         val player = players.find(p => p.position == nfcData.position && p.side == nfcData.side)
         if(player.isEmpty){
           playerRepository.insert(Player(None, currentUser.id.get, game.get.id.get, nfcData.position, nfcData.side))
+        }else{
+          returnCode = BadRequest("Position is already used")
         }
       }
 
-      Ok("Game created")
+      returnCode
   }
 }

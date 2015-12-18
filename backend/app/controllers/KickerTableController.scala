@@ -47,7 +47,7 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
           gamesRepo.updateGoalHome(game.id.get, game.goalsHome + 1)
         }
     }.flatMap{ _ =>
-      Future.successful(Ok("sdfd"))
+      Future.successful(Ok("Goal was added."))
     }
   }
 }
