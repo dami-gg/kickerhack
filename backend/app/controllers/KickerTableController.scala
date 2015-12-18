@@ -41,9 +41,9 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
     }
   }
 
-  def addGoal(side: String) = basicAuth.async { request =>
-    kickerTableRepo.updateLastGoal(request.table.id.get)
-    gamesRepo.findCurrentGameForTable(request.table.id.get).map {
+  def addGoal(tableId: Long, side: String) = Action.async { request =>
+    kickerTableRepo.updateLastGoal(tableId)
+    gamesRepo.findCurrentGameForTable(tableId).map {
       case None => Future.successful()
       case Some(game) =>
         val goalsAway = game.goalsAway + (if (side == Side.AWAY.toString) 1 else 0)

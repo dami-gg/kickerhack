@@ -17,7 +17,7 @@ GET     /me                                 controllers.UserController.getMe
 GET     /tables                             controllers.KickerTableController.getTables
 GET     /tables/:tableId                    controllers.KickerTableController.getTable(tableId: Long)
 GET     /tables/:tableId/current_game       controllers.KickerTableController.getCurrentGame(tableId: Long)
-POST    /sides/:side/goal                   controllers.KickerTableController.addGoal(side: String)
+POST    /tables/:tableId/sides/:side/goal   controllers.KickerTableController.addGoal(tableId: Long, side: String)
 
 # Games
 GET     /games                      controllers.GamesController.getGames
