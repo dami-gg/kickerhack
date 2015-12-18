@@ -42,6 +42,9 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
     gamesRepo.findCurrentGameForTable(request.table.id.get).map {
       case None => Future.successful()
       case Some(game) =>
+        if(game.goalsAway>4 || game.goalsHome>4 ){
+          gamesRepo.closeGame(game.id.get)
+        }
         if (side == Side.AWAY.toString) {
           gamesRepo.updateGoalAway(game.id.get, game.goalsAway + 1)
         } else {
