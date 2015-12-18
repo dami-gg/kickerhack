@@ -28,13 +28,12 @@ class UserRepository {
     } finally { db.close() }
   }
 
-  def findById(id: Long): Future[User] = {
-    try db.run(filterQuery(id).result.head)
+  def findById(id: Long): Future[Option[User]] = {
+    try db.run(users.filter(_.id === id).result.headOption)
     finally db.close
   }
 
-  private def filterQuery(id: Long): Query[Users, User, Seq] =
-    users.filter(_.id === id)
+
 }
 
 
