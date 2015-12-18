@@ -18,22 +18,32 @@ trait AuthService{
 }
 
 class AuthServiceImpl @Inject()(userRepo: UserRepository) extends AuthService with ConfigServiceImpl {
-    def auth(request: Request[AnyContent]):Future[User] = {
-      val authToken = request.headers.get("access_token").get
-      WS.url(s"https://api.github.com/applications/$clientId/tokens/$authToken")
-        .withAuth(clientId, clientSecret, WSAuthScheme.BASIC)
-        .get().flatMap { response: WSResponse =>
-          val json = response.json
-          val userId = (json \ "user" \ "id").as[Long]
-          val userName = (json \ "user" \ "login").as[String]
-          val githubUser = User(Some(userId), userName)
-          userRepo.findById(userId).map(user => user).recover{
-            case e: RuntimeException =>
-              userRepo.insert(githubUser)
-              githubUser
-          }
-        }
+    def auth(request: Request[AnyContent]): Future[User] = {
+    val authToken = request.headers.get("access_token").get
+    val eventualResponse: Future[WSResponse] = WS.url(s"https://api.github.com/applications/$clientId/tokens/$authToken")
+      .withAuth(clientId, clientSecret, WSAuthScheme.BASIC)
+      .get()
+
+    eventualResponse.flatMap(getUserFromResponse)
+  }
+
+  def getUserFromResponse(rsp: WSResponse): Future[User] = {
+    val json = rsp.json
+    val userId = (json \ "user" \ "id").as[Long]
+    val userName = (json \ "user" \ "login").as[String]
+    val githubUser = User(Some(userId), userName)
+
+    val maybeUser: Future[Option[User]] = userRepo.findById(userId)
+
+    maybeUser.flatMap {
+      case Some(user) => Future.successful(user)
+      case None => {
+        userRepo.insert(githubUser)
+        Future.successful(githubUser)
+      }
     }
+  }
+
 }
 
 
