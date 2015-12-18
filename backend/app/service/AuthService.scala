@@ -2,6 +2,7 @@ package service
 
 import javax.inject.Inject
 
+import com.google.inject.ImplementedBy
 import model.User
 import play.api.mvc.{Result, AnyContent, Request}
 import repository.UserRepository
@@ -11,6 +12,7 @@ import play.api.Play.current
 
 import scala.concurrent.{Await, Future}
 
+@ImplementedBy(classOf[AuthServiceImpl])
 trait AuthService{
   def auth(request: Request[AnyContent]):Future[User]
 }

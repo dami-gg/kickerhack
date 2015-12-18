@@ -28,25 +28,25 @@ class Games(tag: Tag) extends Table[Game](tag, Some("kicker"), "game") {
   lazy val kickertableFk = foreignKey("game_g_table_id_fkey", table, kickertable)(_.id)
   lazy val kickertable = TableQuery[KickerTables]
 
-  override def * = (id.?, table, goalsHome, goalsAway, startedOn, finishedOn) <>(Game.tupled, Game.unapply)
+  override def * = (id.?, table, goalsHome, goalsAway, startedOn, finishedOn) <> (Game.tupled, Game.unapply)
 }
 
 class GamesRepository {
-
   private val games = TableQuery[Games]
 
   private def db: Database = Database.forDataSource(DB.getDataSource())
 
-  def insert(game: Game): Future[Int] =
-    try db.run(games += game)
+  def insert(game: Game): Future[Game] = {
+    try db.run((games returning games) += game)
     finally db.close
+  }
 
   def list(): Future[Seq[Game]] =
     try db.run(games.result)
     finally db.close
 
-  def findById(id: Long): Future[Game] =
-    try db.run(filterQuery(id).result.head)
+  def findById(id: Long): Future[Option[Game]] =
+    try db.run(games.filter(_.id === id).result.headOption)
     finally db.close()
 
   def findCurrentGameForTable(tableId: Long): Future[Option[Game]] =
@@ -63,7 +63,8 @@ class GamesRepository {
     db.run(q.update(goalsHome))
   }
 
-  private def filterQuery(id: Long): Query[Games, Game, Seq] =
-    games.filter(_.id === id)
+  def startNewGame(tableId: Long): Future[Game] = {
+    insert(Game(None, tableId, 0, 0, DateTime.now(), None))
+  }
 
 }

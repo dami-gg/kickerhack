@@ -7,7 +7,9 @@ import model._
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import repository.{PlayerRepository, GamesRepository, KickerTableRepository, NfcDataRepository}
+import repository.NfcDataRepository
+import service.AuthService
+import repository.{GamesRepository, KickerTableRepository, NfcDataRepository}
 import service.AuthServiceImpl
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,6 +17,10 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.util.{Success, Failure, Try}
 
+class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository,
+                                  authService: AuthService,
+                                  gamesRepo: GamesRepository
+                                 ) extends Controller {
 class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepository: NfcDataRepository, gamesRepository: GamesRepository, playerRepository: PlayerRepository) extends Controller {
 
   def getNfcData(tag: String) = Action.async {
@@ -41,7 +47,7 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
         case Success(t) => t.getOrElse(throw new IllegalArgumentException())
         case Failure(e) => throw new IllegalArgumentException();
       }
-      val game = Await.ready(gamesRepository.findCurrentGameForTable(nfcData.tableId), Duration.Inf).value.get match {
+      val game = Await.ready(gamesRepo.findCurrentGameForTable(nfcData.tableId), Duration.Inf).value.get match {
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();
       }
