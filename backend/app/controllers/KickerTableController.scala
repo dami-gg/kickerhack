@@ -32,7 +32,8 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
 
   def getCurrentGame(tableId: Long) = Action.async {
     gamesRepo.findCurrentGameForTable(tableId).map {
-      game => Ok(Json.toJson(game))
+      case Some(game) => Ok(Json.toJson(game))
+      case None => NotFound("No game in progress on table " + tableId)
     }
   }
 
