@@ -21,6 +21,6 @@ object JsonConversions {
   implicit val tableWrites = Json.writes[KickerTable]
 
   implicit val playerFormat = Json.format[Player]
-  implicit val gameWrites = Json.writes[Game]
+  implicit val gameFormat = Json.format[Game]
   implicit val nfcDataFormat = Json.format[NfcData]
 }

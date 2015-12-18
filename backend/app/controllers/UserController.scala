@@ -14,13 +14,14 @@ class UserController @Inject()(userRepo: UserRepository, authService: AuthServic
 
   def getUsers = Action.async { result =>
     userRepo.list().map {
-      players => Ok(Json.toJson(players))
+      users => Ok(Json.obj("users" -> Json.toJson(users)))
     }
   }
 
-  def getUser(playerId: Long) = Action.async {
-    userRepo.findById(playerId).map {
-      player => Ok(Json.toJson(player))
+  def getUser(userId: Long) = Action.async {
+    userRepo.findById(userId).map {
+      case Some(user) => Ok(Json.toJson(user))
+      case None => NotFound("No user with ID " + userId)
     }
   }
 

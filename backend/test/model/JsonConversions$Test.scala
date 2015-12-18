@@ -9,7 +9,7 @@ class JsonConversions$Test extends Specification {
 
   "An instance of Player" should {
     "be converted to JSON" in {
-      val player = Player(Some(1l), 2l, 3l, Position.Defense, Side.AWAY)
+      val player = Player(Some(1l), 2l, 3l, Position.DEFENSE, Side.AWAY)
       val json: JsValue = Json.toJson(player)
 
       val parsedVal: JsValue = Json.parse(
@@ -40,7 +40,7 @@ class JsonConversions$Test extends Specification {
       val player: JsResult[Player] = Json.fromJson[Player](json)
 
       println(player)
-      player.get must be equalTo Player(Some(1l), 2l, 3l, Position.Defense, Side.AWAY)
+      player.get must be equalTo Player(Some(1l), 2l, 3l, Position.DEFENSE, Side.AWAY)
     }
     "be created from JSON when no ID is present" in {
       val json: JsValue = Json.parse(
@@ -56,7 +56,7 @@ class JsonConversions$Test extends Specification {
       val player: JsResult[Player] = Json.fromJson[Player](json)
 
       println(player)
-      player.get must be equalTo Player(None, 2l, 3l, Position.Defense, Side.AWAY)
+      player.get must be equalTo Player(None, 2l, 3l, Position.DEFENSE, Side.AWAY)
     }
 
 
