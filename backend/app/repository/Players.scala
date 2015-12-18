@@ -40,6 +40,10 @@ class PlayerRepository {
     try db.run(filterQuery(id).result.head)
     finally db.close
 
+  def findPlayerForGameAndSlot(gameId: Long, side: Side, position: Position): Future[Option[Player]] =
+    try db.run(players.filter(_.id === gameId).filter(_.position === position).filter(_.side == side).result.headOption)
+    finally db.close
+
   private def filterQuery(id: Long): Query[Players, Player, Seq] =
     players.filter(_.id === id)
 }

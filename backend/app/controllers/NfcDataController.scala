@@ -3,10 +3,11 @@ package controllers
 import javax.inject.Inject
 
 import model.JsonConversions._
-import model.{User, JsonConversions, NfcData}
+import model._
+import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import repository.{GamesRepository, KickerTableRepository, NfcDataRepository}
+import repository.{PlayerRepository, GamesRepository, KickerTableRepository, NfcDataRepository}
 import service.AuthServiceImpl
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -14,7 +15,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.util.{Success, Failure, Try}
 
-class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepository: NfcDataRepository, gamesRepository: GamesRepository) extends Controller {
+class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepository: NfcDataRepository, gamesRepository: GamesRepository, playerRepository: PlayerRepository) extends Controller {
 
   def getNfcData(tag: String) = Action.async {
     nfcDataRepository.getNfcData(tag).map {
@@ -44,12 +45,23 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();
       }
-      if(game.nonEmpty){
-        //try to register player
+      if(game.isEmpty){
+        val newGame = Game(None, nfcData.tableId, 0, 0, DateTime.now(), None)
+        val newGameId = Await.ready(gamesRepository.insert(newGame), Duration.Inf).value.get match {
+          case Success(t) => t
+          case Failure(e) => throw new IllegalArgumentException();
+        }
+        playerRepository.insert(Player(None, currentUser.id.get, newGameId, nfcData.position, nfcData.side))
       }else{
-        //create game
+        val player = Await.ready(playerRepository.findPlayerForGameAndSlot(game.get.id.get, nfcData.side, nfcData.position), Duration.Inf).value.get match {
+          case Success(t) => t
+          case Failure(e) => throw new IllegalArgumentException();
+        }
+        if(player.isEmpty){
+          playerRepository.insert(Player(None, currentUser.id.get, game.get.id.get, nfcData.position, nfcData.side))
+        }
       }
 
-      Ok("sdf")
+      Ok("Game created")
   }
 }
