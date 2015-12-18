@@ -44,7 +44,7 @@ class TableController @Inject()(authService: AuthServiceImpl, gamesRepository: G
           gamesRepository.updateGoalHome(game.id.get, game.goalsHome + 1)
         }
     }.flatMap{ _ =>
-      Future.successful(Ok("dfs"))
+      Future.successful(Ok("sdfd"))
     }
   }
 }
