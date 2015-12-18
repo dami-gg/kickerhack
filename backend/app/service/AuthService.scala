@@ -33,13 +33,11 @@ class AuthServiceImpl @Inject()(userRepo: UserRepository) extends AuthService wi
     val userName = (json \ "user" \ "login").as[String]
     val githubUser = User(Some(userId), userName)
 
-    val maybeUser: Future[Option[User]] = userRepo.findById(userId)
-
-    maybeUser.flatMap {
-      case Some(user) => Future.successful(user)
+    userRepo.findById(userId).map {
+      case Some(user) => user
       case None => {
         userRepo.insert(githubUser)
-        Future.successful(githubUser)
+        githubUser
       }
     }
   }
