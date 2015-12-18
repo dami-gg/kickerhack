@@ -14,10 +14,10 @@ GET     /users/:userId              controllers.UserController.getUser(userId: L
 GET     /me                         controllers.UserController.getMe
 
 # Tables
-GET     /tables                             controllers.TableController.getTables
-GET     /tables/:tableId                    controllers.TableController.getTable(tableId: Long)
-GET     /tables/:tableId/current_game       controllers.TableController.getCurrentGame(tableId: Long)
-POST    /tables/:tableId/sides/:side/goal   controllers.TableController.addGoal(tableId: Long, side: String)
+GET     /tables                             controllers.KickerTableController.getTables
+GET     /tables/:tableId                    controllers.KickerTableController.getTable(tableId: Long)
+GET     /tables/:tableId/current_game       controllers.KickerTableController.getCurrentGame(tableId: Long)
+POST    /sides/:side/goal                   controllers.KickerTableController.addGoal(side: String)
 
 # Games
 GET     /games                      controllers.GamesController.getGames
@@ -27,5 +27,5 @@ GET     /games/:gameId              controllers.GamesController.getGame(gameId: 
 
 # NFC data
 GET     /nfc-data                   controllers.NfcDataController.getAll
-GET     /nfc-data/:uuid             controllers.NfcDataController.getNfcData(uuid: String)
-# PUT     /nfc-data/:uuid             controllers.NfcController.registerPlayer(uuid: String)
+GET     /nfc-data/:nfcTag           controllers.NfcDataController.getNfcData(nfcTag: String)
+PUT     /nfc-data/:nfcTag           controllers.NfcDataController.registerPlayer(nfcTag: String)

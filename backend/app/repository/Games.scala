@@ -2,7 +2,7 @@ package repository
 
 import java.sql.Timestamp
 
-import model.{Game}
+import model.Game
 import org.joda.time.DateTime
 import play.api.db.DB
 import slick.driver.PostgresDriver.api._
@@ -54,12 +54,13 @@ class GamesRepository {
     finally db.close()
 
   def updateGoalAway(gameId: Long, goalsAway: Int) = {
-    val q = for { c <- games if c.id === gameId} yield c.goalsAway
-    val updateAction = q.update(goalsAway)
+    val q = for {c <- games if c.id === gameId} yield c.goalsAway
+    db.run(q.update(goalsAway))
   }
+
   def updateGoalHome(gameId: Long, goalsHome: Int) = {
-    val q = for { c <- games if c.id === gameId} yield c.goalsHome
-    val updateAction = q.update(goalsHome)
+    val q = for {c <- games if c.id === gameId} yield c.goalsHome
+    db.run(q.update(goalsHome))
   }
 
   def startNewGame(tableId: Long): Future[Game] = {
