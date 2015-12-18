@@ -3,12 +3,12 @@ package controllers
 import javax.inject.Inject
 
 import model.JsonConversions._
-import model.{User, JsonConversions, NfcData}
+import model._
+import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import repository.NfcDataRepository
+import repository._
 import service.AuthService
-import repository.{GamesRepository, KickerTableRepository, NfcDataRepository}
 import service.AuthServiceImpl
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,10 +16,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.util.{Success, Failure, Try}
 
-class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository,
-                                  authService: AuthService,
-                                  gamesRepo: GamesRepository
-                                 ) extends Controller {
+class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepository: NfcDataRepository, gamesRepository: GamesRepository, playerRepository: PlayerRepository) extends Controller {
 
   def getNfcData(tag: String) = Action.async {
     nfcDataRepository.getNfcData(tag).map {
@@ -37,6 +34,7 @@ class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository,
   }
 
   def registerPlayer(uuid: String) = Action { request =>
+      var returnCode = Ok("Game created")
       val currentUser = Await.ready(authService.auth(request), Duration.Inf).value.get match {
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();
@@ -45,16 +43,30 @@ class NfcDataController @Inject()(nfcDataRepository: NfcDataRepository,
         case Success(t) => t.getOrElse(throw new IllegalArgumentException())
         case Failure(e) => throw new IllegalArgumentException();
       }
-      val game = Await.ready(gamesRepo.findCurrentGameForTable(nfcData.tableId), Duration.Inf).value.get match {
+      val game = Await.ready(gamesRepository.findCurrentGameForTable(nfcData.tableId), Duration.Inf).value.get match {
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();
       }
-      if(game.nonEmpty){
-        //try to register player
+      if(game.isEmpty){
+        val newGame = Game(None, nfcData.tableId, 0, 0, DateTime.now(), None)
+        val newGameId = Await.ready(gamesRepository.insert(newGame), Duration.Inf).value.get match {
+          case Success(t) => t
+          case Failure(e) => throw new IllegalArgumentException();
+        }
+        playerRepository.insert(Player(None, currentUser.id.get, newGameId.id.get, nfcData.position, nfcData.side))
       }else{
-        //create game
+        val players = Await.ready(playerRepository.findbyGame(game.get.id.get), Duration.Inf).value.get match {
+          case Success(t) => t
+          case Failure(e) => throw new IllegalArgumentException();
+        }
+        val player = players.find(p => p.position == nfcData.position && p.side == nfcData.side)
+        if(player.isEmpty){
+          playerRepository.insert(Player(None, currentUser.id.get, game.get.id.get, nfcData.position, nfcData.side))
+        }else{
+          returnCode = BadRequest("Position is already used")
+        }
       }
 
-      Ok("sdf")
+      returnCode
   }
 }
