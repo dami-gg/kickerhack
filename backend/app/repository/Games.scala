@@ -36,16 +36,17 @@ class GamesRepository {
 
   private def db: Database = Database.forDataSource(DB.getDataSource())
 
-  def insert(game: Game): Future[Int] =
-    try db.run(games += game)
+  def insert(game: Game): Future[Game] = {
+    try db.run((games returning games) += game)
     finally db.close
+  }
 
   def list(): Future[Seq[Game]] =
     try db.run(games.result)
     finally db.close
 
-  def findById(id: Long): Future[Game] =
-    try db.run(filterQuery(id).result.head)
+  def findById(id: Long): Future[Option[Game]] =
+    try db.run(games.filter(_.id === id).result.headOption)
     finally db.close()
 
   def findCurrentGameForTable(tableId: Long): Future[Option[Game]] =
@@ -60,7 +61,9 @@ class GamesRepository {
     val q = for { c <- games if c.id === gameId} yield c.goalsHome
     val updateAction = q.update(goalsHome)
   }
-    private def filterQuery(id: Long): Query[Games, Game, Seq] =
-  games.filter(_.id === id)
+
+  def startNewGame(tableId: Long): Future[Game] = {
+    insert(Game(None, tableId, 0, 0, DateTime.now(), None))
+  }
 
 }

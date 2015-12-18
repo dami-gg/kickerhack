@@ -20,11 +20,12 @@ GET     /tables/:tableId/current_game       controllers.TableController.getCurre
 POST    /tables/:tableId/sides/:side/goal   controllers.TableController.addGoal(tableId: Long, side: String)
 
 # Games
-#GET     /games                      controllers.Application.getGames
-#GET     /games/:gameId              controllers.Application.getGame(gameId: Long)
+GET     /games                      controllers.GamesController.getGames
+GET     /games/:gameId              controllers.GamesController.getGame(gameId: Long)
 #DELETE  /games/:gameId              controllers.Application.getGame(gameId: Long)
-#POST    /games/:gameId/finised      controllers.Application.getGame(gameId: Long)
+#POST    /games/:gameId/finished      controllers.Application.getGame(gameId: Long)
 
 # NFC data
-GET     /nfc-data/:uuid             controllers.NfcController.getNfcData(uuid: String)
-PUT     /nfc-data/:uuid             controllers.NfcController.registerPlayer(uuid: String)
+GET     /nfc-data                   controllers.NfcDataController.getAll
+GET     /nfc-data/:uuid             controllers.NfcDataController.getNfcData(uuid: String)
+# PUT     /nfc-data/:uuid             controllers.NfcController.registerPlayer(uuid: String)
