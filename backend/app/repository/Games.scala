@@ -12,18 +12,12 @@ import scala.concurrent.Future
 
 class Games(tag: Tag) extends Table[Game](tag, Some("kicker"), "game") {
 
-  implicit def dateTime =
-    MappedColumnType.base[DateTime, Timestamp](
-      dt => new Timestamp(dt.getMillis),
-      ts => new DateTime(ts.getTime)
-    )
-
   val id = column[Long]("g_id", O.AutoInc, O.PrimaryKey)
   val table = column[Long]("g_table_id")
   val goalsHome = column[Int]("g_goals_home")
   val goalsAway = column[Int]("g_goals_away")
   val startedOn = column[DateTime]("g_started_on")
-  val finishedOn = column[Option[DateTime]]("g_finished_on", O.Default(None))
+  val finishedOn = column[Option[Long]]("g_finished_on", O.Default(None))
 
   lazy val kickertableFk = foreignKey("game_g_table_id_fkey", table, kickertable)(_.id)
   lazy val kickertable = TableQuery[KickerTables]
@@ -65,6 +59,11 @@ class GamesRepository {
 
   def startNewGame(tableId: Long): Future[Game] = {
     insert(Game(None, tableId, 0, 0, DateTime.now(), None))
+  }
+
+  def finishGame(gameId: Long) = {
+    val q = for {g <- games if g.id === gameId } yield g.finishedOn
+    db.run(q.update(Some(DateTime.now().getMillis)))
   }
 
 }

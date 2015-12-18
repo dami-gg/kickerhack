@@ -17,11 +17,9 @@ class GamesController @Inject()(gamesRepo: GamesRepository,
   def getGames = Action.async {
     for {
       games <- gamesRepo.list()
-      gamesWithPlayers = games.map(withPlayers)
-      sq <- Future.sequence(gamesWithPlayers)
-      gwp = sq.flatten
+      gamesWithPlayers <- Future.sequence(games.map(withPlayers))
     } yield {
-      Ok(Json.toJson(gwp))
+      Ok(Json.toJson(gamesWithPlayers.flatten))
     }
   }
 

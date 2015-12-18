@@ -5,8 +5,8 @@ CREATE TABLE "kicker"."game" (
   g_table_id BIGINT NOT NULL REFERENCES "kicker"."kickerTable" (kt_id),
   g_goals_home SMALLINT NOT NULL,
   g_goals_away SMALLINT NOT NULL,
-  g_started_on TIMESTAMP NOT NULL,
-  g_finished_on TIMESTAMP
+  g_started_on BIGINT NOT NULL,
+  g_finished_on BIGINT
 );
 CREATE TABLE "kicker"."player" (
   p_id       BIGSERIAL    NOT NULL PRIMARY KEY,
