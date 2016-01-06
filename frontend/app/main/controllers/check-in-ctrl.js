@@ -12,7 +12,7 @@ angular.module('main')
       this.tagId = $stateParams.tagId;
 
       this.fallbackTagData = function (error) {
-        $log.log('fallback');
+        $log.log('fallback!!');
         var json = '{"uuid": "9f5b5bf9-7e74-44cb-b9d3-f915224a6a44", "table_id": 2, "side": "home", "position": "offense"}';
         $timeout(function () {
           vm.tagData = JSON.parse(json);
@@ -22,6 +22,7 @@ angular.module('main')
       this.checkIn = function () {
         TablesService.registerPlayerInTable(vm.tagData.table_id, vm.tagData.side, vm.tagData.position)
           .then(function (response) {
+            $log.log(response);
             if (response === true) {
               $state.go('main.game', { 'tableId': vm.tagData.table_id, 'side': vm.tagData.side });
             }

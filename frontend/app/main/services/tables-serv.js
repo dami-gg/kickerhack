@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('main')
-  .service('TablesService', ['$http', function ($http) {
-
+  .service('TablesService', ['$http', '$log', 'Config', function ($http, $log, Config) {
+    $log = $log.getInstance('TablesService');
     var vm = this;
 
     var allTablesJson = '[{"id":123,"building":"BNB","floor":1,"home":"red","away":"blue","last_goal_scored":"2015-12-14T15:20+01:00"},{"id":124,"building":"BMO","floor":1,"home":"red","away":"blue","last_goal_scored":"2015-12-14T15:20+01:00"},{"id":1,"building":"BMO","floor":2,"home":"red","away":"blue","last_goal_scored":"2015-12-14T15:20+01:00"}]';
@@ -13,7 +13,7 @@ angular.module('main')
      * @returns {*}
      */
     vm.getTables = function () {
-      return $http.get('/tables')
+      return $http.get(Config.ENV.SERVER_URL + '/tables')
         .then(
           function (response) {
             return response.data;
@@ -30,7 +30,7 @@ angular.module('main')
      * @returns {*}
      */
     vm.getTableById = function (tableId) {
-      return $http.get('/tables/' + tableId)
+      return $http.get(Config.ENV.SERVER_URL + '/tables/' + tableId)
         .then(
           function (response) {
             return response.data;
@@ -51,14 +51,14 @@ angular.module('main')
       return vm.getTables()
         .then(
           function (response) {
+            $log.log(response);
             if (response !== null) {
-              tables = response;
+              tables = response.tables;
             }
             else {
-              // TODO Change when API is ready
-              // vm.locations = {};
-              var parsedJson = JSON.parse(allTablesJson);
-              tables = parsedJson;
+              $log.log("Unable to collect tables");
+              vm.locations = {};
+              tables = [];
             }
             tables.forEach(function (table) {
               if (locations.indexOf(table.building) === -1) {
@@ -88,7 +88,7 @@ angular.module('main')
         .then(
           function (response) {
             if (response !== null) {
-              tables = response;
+              tables = response.tables;
             }
             else {
               // TODO Change when API is ready
@@ -129,7 +129,7 @@ angular.module('main')
      *  - null if there's no game at the moment or an error happens
      */
     vm.getCurrentGameInTable = function (tableId) {
-      return $http.get('/tables/' + tableId + '/current_game')
+      return $http.get(Config.ENV.SERVER_URL + '/tables/' + tableId + '/current_game')
         .then(
           function (response) {
             if (response.status === 200) {
@@ -165,7 +165,7 @@ angular.module('main')
      *  - false in case of error
      */
     vm.registerPlayerInTable = function (tableId, side, position) {
-      return $http.put('/tables/' + tableId + '/current_game',
+      return $http.put(Config.ENV.SERVER_URL + '/tables/' + tableId + '/current_game',
         {'side': side, 'position': position})
         .then(
           function (response) {
@@ -192,7 +192,7 @@ angular.module('main')
      *  - false in case of error
      */
     vm.registerGoalInTable = function (tableId, side) {
-      return $http.post('/tables/' + tableId + '/sides/' + side + '/goal')
+      return $http.post(Config.ENV.SERVER_URL + '/tables/' + tableId + '/sides/' + side + '/goal')
         .then(
           function (response) {
             if (response.status === 201) {
