@@ -10,7 +10,7 @@ import play.api.mvc.{Action, Controller}
 import repository._
 import service.AuthServiceImpl
 
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
@@ -47,7 +47,7 @@ class NfcDataController @Inject()(authService: AuthServiceImpl, nfcDataRepositor
       case Failure(e) => throw new IllegalArgumentException();
     }
     if (game.isEmpty) {
-      val newGame = Game(None, nfcData.tableId, 0, 0, DateTime.now(), None)
+      val newGame = Game(None, nfcData.tableId, 0, 0, DateTime.now().getMillis, None)
       val newGameId = Await.ready(gamesRepository.insert(newGame), Duration.Inf).value.get match {
         case Success(t) => t
         case Failure(e) => throw new IllegalArgumentException();

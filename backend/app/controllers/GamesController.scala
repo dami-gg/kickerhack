@@ -11,33 +11,8 @@ import model.JsonConversions.gameFormat
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class GamesController @Inject()(gamesRepo: GamesRepository,
-                                playerRepo: PlayerRepository) extends Controller {
-
-  def getGames = Action.async {
-    for {
-      games <- gamesRepo.list()
-      gamesWithPlayers <- Future.sequence(games.map(withPlayers))
-    } yield {
-      Ok(Json.toJson(gamesWithPlayers.flatten))
-    }
-  }
-
-  def getGame(gameId: Long) = Action.async {
-    gamesRepo.findById(gameId).map {
-      case Some(game) => Ok(Json.toJson(GameWithPlayers(game, Seq())))
-      case None => NotFound("No game with ID " + gameId)
-    }
-  }
-
-  def withPlayers(game: Game): Future[Option[GameWithPlayers]] = {
-    game.id match {
-      case Some(id) => playerRepo.findbyGame(id).map(ps => Some(GameWithPlayers(game, ps)))
-      case None => Future.successful(None)
-    }
-  }
-
-  case class GameWithPlayers(game: Game, players: Seq[Player])
+case class GameWithPlayers(game: Game, players: Seq[Player])
+object GameWithPlayers {
   implicit val gameWithPlayersWrites = new Writes[GameWithPlayers] {
     override def writes(o: GameWithPlayers): JsValue = {
       val game = o.game
@@ -58,5 +33,38 @@ class GamesController @Inject()(gamesRepo: GamesRepository,
       )
     }
   }
+}
+
+class GamesController @Inject()(gamesRepo: GamesRepository,
+                                playerRepo: PlayerRepository) extends Controller {
+
+
+
+  def getGames = Action.async {
+    for {
+      games <- gamesRepo.list()
+      gamesWithPlayers <- Future.sequence(games.map(withPlayers))
+    } yield {
+      Ok(Json.toJson(gamesWithPlayers.flatten))
+    }
+  }
+
+  def getGame(gameId: Long) = Action.async {
+    for {
+      game0 <- gamesRepo.findById(gameId)
+      gwp <- withPlayers(game0.get)
+    } yield {
+      Ok(Json.toJson(gwp.get))
+    }
+  }
+
+  def withPlayers(game: Game): Future[Option[GameWithPlayers]] = {
+    game.id match {
+      case Some(id) => playerRepo.findbyGame(id).map(ps => Some(GameWithPlayers(game, ps)))
+      case None => Future.successful(None)
+    }
+  }
+
+
 
 }

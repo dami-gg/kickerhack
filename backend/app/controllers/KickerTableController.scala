@@ -4,12 +4,13 @@ import javax.inject.Inject
 
 import controllers.actions.BasicAuth
 import model.JsonConversions._
-import model.{KickerTable, Side}
+import model.{Game, KickerTable, Side}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import repository.{GamesRepository, KickerTableRepository}
 import service.AuthServiceImpl
 
+import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -17,6 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class KickerTableController @Inject()(authService: AuthServiceImpl,
                                       basicAuth: BasicAuth,
                                       gamesRepo: GamesRepository,
+                                      gamesController: GamesController,
                                       kickerTableRepo: KickerTableRepository) extends Controller{
 
   def getTables = Action.async {
@@ -31,15 +33,17 @@ class KickerTableController @Inject()(authService: AuthServiceImpl,
   }
 
   def getCurrentGame(tableId: Long) = Action.async {
-    gamesRepo.findCurrentGameForTable(tableId).map {
-      case Some(game) => Ok(Json.toJson(game))
-      case None => NotFound("No game in progress on table " + tableId)
+    for {
+      currentGame <- gamesRepo.findCurrentGameForTable(tableId)
+    gwp <- gamesController.withPlayers(currentGame.get)
+    } yield {
+      Ok(Json.toJson(gwp.get))
     }
   }
 
-  def addGoal(side: String) = basicAuth.async { request =>
-    kickerTableRepo.updateLastGoal(request.table.id.get)
-    gamesRepo.findCurrentGameForTable(request.table.id.get).map {
+  def addGoal(tableId: Long, side: String) = Action.async { request =>
+    kickerTableRepo.updateLastGoal(tableId)
+    gamesRepo.findCurrentGameForTable(tableId).map {
       case None => Future.successful()
       case Some(game) =>
         val goalsAway = game.goalsAway + (if (side == Side.AWAY.toString) 1 else 0)
